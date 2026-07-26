@@ -1,6 +1,6 @@
 module github.com/Aliizi83/sample-golang-project
 
-go 1.26.5
+go 1.26
 
 require (
 	github.com/bytedance/gopkg v0.1.4 // indirect
