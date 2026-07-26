@@ -1,11 +1,17 @@
 package api
 
 import (
+	"fmt"
+
 	"github.com/Aliizi83/sample-golang-project/src/api/routers"
+	"github.com/Aliizi83/sample-golang-project/src/config"
 	"github.com/gin-gonic/gin"
 )
 
 func InitServer() {
+
+	cfg := config.GetConfig()
+
 	r := gin.New()
 	r.Use(gin.Logger(), gin.Recovery())
 
@@ -15,5 +21,5 @@ func InitServer() {
 		routers.Health(health)
 	}
 
-	r.Run(":5005")
+	r.Run(fmt.Sprintf(":%s", cfg.Server.InternalPort))
 }
