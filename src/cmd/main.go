@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"github.com/Aliizi83/sample-golang-project/src/api"
+)
 
 func main() {
-	fmt.Println("Hello")
+	api.InitServer()
 }
