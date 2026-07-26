@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: car_sale_db
+      PGDATA: /data/postgres
+    volumes:
+      - postgres_data:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - web_api_network
+    restart: unless-stopped
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: aliizi1383@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: 1qaz!QAZ
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "80:8081"
+    networks:
+      - web_api_network
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    command: redis-server /etc/redis/redis.conf
+    volumes:
+      - ./redis/redis.conf:/etc/redis/redis.conf
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - web_api_network
+
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+  redis_data:
+  logs:
+
+networks:
+  web_api_network:
+    driver: bridge
+  
