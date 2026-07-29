@@ -3,11 +3,12 @@ server:
   externalPort: 5005
   runMode: debug
   domain: localhost
+  appName: car-sale
 logger:
   fileFolderPath: ../logs
   encoding: json
   level: debug
-  logger: zap
+  logger: zero # ["zap" | "zero"]
   maxLogAge: 7 # days
   maxLogSize: 1 # megabytes
 cors:

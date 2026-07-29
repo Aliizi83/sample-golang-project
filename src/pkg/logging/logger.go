@@ -28,7 +28,7 @@ func NewLogger(cfg *config.Config) Logger {
 	case "zap":
 		return NewZapLogger(cfg)
 	case "zero":
-		return nil
+		return NewZeroLogger(cfg)
 	default:
 		return NewZapLogger(cfg)
 	}

@@ -9,7 +9,7 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-var logLevelMap = map[string]zapcore.Level{
+var zapLogLevelMap = map[string]zapcore.Level{
 	"debug":   zapcore.DebugLevel,
 	"info":    zapcore.InfoLevel,
 	"warning": zapcore.WarnLevel,
@@ -18,6 +18,7 @@ var logLevelMap = map[string]zapcore.Level{
 }
 
 var once sync.Once
+var zapSinLogger *zap.SugaredLogger
 
 type ZapLogger struct {
 	cfg    *config.Config
@@ -31,7 +32,7 @@ func NewZapLogger(cfg *config.Config) *ZapLogger {
 }
 
 func (z *ZapLogger) getLogLevel() zapcore.Level {
-	level, ok := logLevelMap[z.cfg.Logger.Level]
+	level, ok := zapLogLevelMap[z.cfg.Logger.Level]
 	if !ok {
 		return zapcore.InfoLevel
 	}
@@ -57,10 +58,10 @@ func (z *ZapLogger) Init() {
 			w,
 			z.getLogLevel(),
 		)
-		z.logger = zap.New(core).Sugar()
-
-		z.logger = zap.New(core, zap.AddCallerSkip(1), zap.AddStacktrace(zapcore.ErrorLevel)).Sugar()
+		zapSinLogger = zap.New(core, zap.AddCallerSkip(1), zap.AddStacktrace(zapcore.ErrorLevel)).Sugar()
 	})
+
+	z.logger = zapSinLogger
 }
 
 func (z *ZapLogger) Debug(category Category, subCategory SubCategory, message string, extra map[ExtraKey]interface{}) {

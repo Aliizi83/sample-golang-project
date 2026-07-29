@@ -25,6 +25,7 @@ type ServerConfig struct {
 	ExternalPort string
 	RunMode      string
 	Domain       string
+	AppName      string
 }
 
 type LoggerConfig struct {
