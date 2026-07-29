@@ -36,9 +36,9 @@ func (z *ZapLogger) getLogLevel() zapcore.Level {
 
 func (z *ZapLogger) Init() {
 	w := zapcore.AddSync(&lumberjack.Logger{
-		Filename:   z.cfg.Logger.FilePath,
-		MaxSize:    1,
-		MaxAge:     5,
+		Filename:   GetLogFileNamePerDay(z.cfg.Logger.FileFolderPath),
+		MaxSize:    z.cfg.Logger.MaxLogSize,
+		MaxAge:     int(z.cfg.Logger.MaxLogAge),
 		Compress:   true,
 		LocalTime:  true,
 		MaxBackups: 10,
