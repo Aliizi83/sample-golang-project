@@ -6,9 +6,13 @@ import (
 	"github.com/Aliizi83/sample-golang-project/src/api/routers"
 	"github.com/Aliizi83/sample-golang-project/src/api/validations"
 	"github.com/Aliizi83/sample-golang-project/src/config"
+	"github.com/Aliizi83/sample-golang-project/src/docs"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
+
+	swaggerFiles "github.com/swaggo/files"
+	goSwagger "github.com/swaggo/gin-swagger"
 )
 
 func InitServer(cfg *config.Config) {
@@ -16,6 +20,7 @@ func InitServer(cfg *config.Config) {
 	r := gin.New()
 	r.Use(gin.Logger(), gin.Recovery())
 	RegisterRouters(r)
+	RegisterSwagger(r, cfg)
 	r.Run(fmt.Sprintf(":%s", cfg.Server.InternalPort))
 }
 
@@ -43,4 +48,14 @@ func RegisterRouters(r *gin.Engine) {
 
 		}
 	}
+}
+
+func RegisterSwagger(r *gin.Engine, cfg *config.Config) {
+	docs.SwaggerInfo.Title = "Web api documentation"
+	docs.SwaggerInfo.Description = "Web api documentation"
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.BasePath = "/api"
+	docs.SwaggerInfo.Schemes = []string{"http"}
+	docs.SwaggerInfo.Host = fmt.Sprintf("%s:%s", cfg.Server.Domain, cfg.Server.InternalPort)
+	r.GET("/swagger/*any", goSwagger.WrapHandler(swaggerFiles.Handler))
 }
