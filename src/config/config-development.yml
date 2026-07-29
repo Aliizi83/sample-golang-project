@@ -4,10 +4,12 @@ server:
   runMode: debug
   domain: localhost
 logger:
-  filePath: ../logs/app.log
+  fileFolderPath: ../logs
   encoding: json
   level: debug
   logger: zap
+  maxLogAge: 7 # days
+  maxLogSize: 1 # megabytes
 cors:
   allowOrigins: "*"
 postgres:

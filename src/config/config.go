@@ -28,10 +28,12 @@ type ServerConfig struct {
 }
 
 type LoggerConfig struct {
-	FilePath string
-	Encoding string
-	Level    string
-	Logger   string
+	FileFolderPath string
+	Encoding       string
+	Level          string
+	Logger         string
+	MaxLogAge      time.Duration
+	MaxLogSize     int
 }
 
 type PostgresConfig struct {
@@ -96,7 +98,7 @@ func GetConfig() *Config {
 	if err != nil {
 		log.Fatalf("Error in parse config %v", err)
 	}
-	
+
 	envPort := os.Getenv("PORT")
 	if envPort != "" {
 		cfg.Server.ExternalPort = envPort
