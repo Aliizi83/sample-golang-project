@@ -1,6 +1,8 @@
 package logging
 
 import (
+	"sync"
+
 	"github.com/Aliizi83/sample-golang-project/src/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -14,6 +16,8 @@ var logLevelMap = map[string]zapcore.Level{
 	"error":   zapcore.ErrorLevel,
 	"fatal":   zapcore.FatalLevel,
 }
+
+var once sync.Once
 
 type ZapLogger struct {
 	cfg    *config.Config
@@ -35,26 +39,28 @@ func (z *ZapLogger) getLogLevel() zapcore.Level {
 }
 
 func (z *ZapLogger) Init() {
-	w := zapcore.AddSync(&lumberjack.Logger{
-		Filename:   GetLogFileNamePerDay(z.cfg.Logger.FileFolderPath),
-		MaxSize:    z.cfg.Logger.MaxLogSize,
-		MaxAge:     int(z.cfg.Logger.MaxLogAge),
-		Compress:   true,
-		LocalTime:  true,
-		MaxBackups: 10,
+	once.Do(func() {
+		w := zapcore.AddSync(&lumberjack.Logger{
+			Filename:   GetLogFileNamePerDay(z.cfg.Logger.FileFolderPath),
+			MaxSize:    z.cfg.Logger.MaxLogSize,
+			MaxAge:     int(z.cfg.Logger.MaxLogAge),
+			Compress:   true,
+			LocalTime:  true,
+			MaxBackups: 10,
+		})
+
+		config := zap.NewProductionEncoderConfig()
+		config.EncodeTime = zapcore.ISO8601TimeEncoder
+
+		core := zapcore.NewCore(
+			zapcore.NewJSONEncoder(config),
+			w,
+			z.getLogLevel(),
+		)
+		z.logger = zap.New(core).Sugar()
+
+		z.logger = zap.New(core, zap.AddCallerSkip(1), zap.AddStacktrace(zapcore.ErrorLevel)).Sugar()
 	})
-
-	config := zap.NewProductionEncoderConfig()
-	config.EncodeTime = zapcore.ISO8601TimeEncoder
-
-	core := zapcore.NewCore(
-		zapcore.NewJSONEncoder(config),
-		w,
-		z.getLogLevel(),
-	)
-	z.logger = zap.New(core).Sugar()
-
-	z.logger = zap.New(core, zap.AddCallerSkip(1), zap.AddStacktrace(zapcore.ErrorLevel)).Sugar()
 }
 
 func (z *ZapLogger) Debug(category Category, subCategory SubCategory, message string, extra map[ExtraKey]interface{}) {
