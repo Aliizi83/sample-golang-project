@@ -1,26 +1,26 @@
 package main
 
 import (
-	"log"
-
 	"github.com/Aliizi83/sample-golang-project/src/api"
 	"github.com/Aliizi83/sample-golang-project/src/config"
 	"github.com/Aliizi83/sample-golang-project/src/infra/cache"
 	"github.com/Aliizi83/sample-golang-project/src/infra/db"
+	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
 )
 
 func main() {
 
 	cfg := config.GetConfig()
 	err := cache.InitRedis(cfg)
+	logger := logging.NewLogger(cfg)
 	defer cache.CloseRedis()
 	if err != nil {
-		log.Fatal("Redis connection failed: " + err.Error())
+		logger.Fatal(err, logging.Redis, logging.Startup, err.Error(), nil)
 		return
 	}
 
 	if err := db.InitDB(cfg); err != nil {
-		log.Fatal("Postgres conection failed: " + err.Error())
+		logger.Fatal(err, logging.Postgres, logging.Startup, err.Error(), nil)
 	}
 	defer db.CloseDB()
 
