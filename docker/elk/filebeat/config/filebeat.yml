@@ -9,8 +9,6 @@ filebeat.config:
     path: ${path.config}/modules.d/*.yml
     reload.enabled: false
 
-
-
 # filebeat.autodiscover:
 #   providers:
 #     # The Docker autodiscover provider automatically retrieves logs from Docker
@@ -38,26 +36,34 @@ filebeat.inputs:
     enabled: true
     id: car-sale-application-logs
     paths:
-      - /var/log/application-logs/*.log
-    prospector.scanner.fingerprint.length: 64
-    prospector.scanner.fingerprint.offset: 0
+      - /var/log/filebeat/service/*.log
     fields:
       service_name: car-sale-api
+      environment: Development
     fields_under_root: true
-    take_over.enabled: true
     tags: ["goapplication"]
-    multiline.pattern: "^{"
-    multiline.negate: true
-    multiline.match: after
+    parsers:
+      - ndjson:
+          target: ""
+          overwrite_keys: true
+          add_error_key: true
 
 processors:
   - add_cloud_metadata: ~
+
+setup.template.name: "logs-service"
+setup.template.pattern: "logs-service-*"
+setup.kibana.host: kibana:5601
+setup.template.settings:
+  index.number_of_shards: 1
 
 monitoring:
   enabled: true
   elasticsearch:
     username: beats_system
     password: ${BEATS_SYSTEM_PASSWORD}
+
+filebeat.shutdown_timeout: 5s
 
 output.elasticsearch:
   hosts: [ http://elasticsearch:9200 ]

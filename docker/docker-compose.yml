@@ -133,7 +133,9 @@ services:
       - --strict.perms=false
     volumes:
       - ./elk/filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro,Z
-      - ../src/logs:/var/log/application-logs:ro,Z
+      - ../src/logs:/var/log/filebeat/service:ro
+      - logs:/var/log/filebeat
+      - logs:/app:ro
     environment:
       FILEBEAT_INTERNAL_PASSWORD: ${FILEBEAT_INTERNAL_PASSWORD:-}
       BEATS_SYSTEM_PASSWORD: ${BEATS_SYSTEM_PASSWORD:-}
