@@ -8,7 +8,7 @@ logger:
   fileFolderPath: ../logs
   encoding: json
   level: debug
-  logger: zero # ["zap" | "zero"]
+  logger: zap # ["zap" | "zero"]
   maxLogAge: 7 # days
   maxLogSize: 1 # megabytes
 cors:

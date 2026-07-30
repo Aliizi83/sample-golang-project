@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 
+	"github.com/Aliizi83/sample-golang-project/src/api/middlewares"
 	"github.com/Aliizi83/sample-golang-project/src/api/routers"
 	"github.com/Aliizi83/sample-golang-project/src/api/validations"
 	"github.com/Aliizi83/sample-golang-project/src/config"
@@ -18,6 +19,7 @@ import (
 func InitServer(cfg *config.Config) {
 
 	r := gin.New()
+	r.Use(middlewares.DefaultStructuredLogger(cfg))
 	r.Use(gin.Logger(), gin.Recovery())
 	RegisterRouters(r)
 	RegisterSwagger(r, cfg)
