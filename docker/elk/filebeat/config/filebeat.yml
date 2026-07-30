@@ -39,10 +39,12 @@ filebeat.inputs:
     id: car-sale-application-logs
     paths:
       - /var/log/application-logs/*.log
+    prospector.scanner.fingerprint.length: 64
+    prospector.scanner.fingerprint.offset: 0
     fields:
       service_name: car-sale-api
-      fields_under_root: true
-    take_over: true
+    fields_under_root: true
+    take_over.enabled: true
     tags: ["goapplication"]
     multiline.pattern: "^{"
     multiline.negate: true
