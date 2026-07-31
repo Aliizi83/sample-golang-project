@@ -57,9 +57,10 @@ func structuredLogger(logger logging.Logger) gin.HandlerFunc {
 		if rawQuery != "" {
 			path = path + "?" + rawQuery
 		}
-
 		param.Path = path
+
 		keys := map[logging.ExtraKey]interface{}{}
+		keys[logging.Path] = param.Path
 		keys[logging.Latency] = param.Latency
 		keys[logging.ClientIp] = param.ClientIP
 		keys[logging.Method] = param.Method

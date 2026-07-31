@@ -10,7 +10,7 @@ logger:
   level: debug
   logger: zap # ["zap" | "zero"]
   maxLogAge: 7 # days
-  maxLogSize: 1 # megabytes
+  maxLogSize: 50 # megabytes
 cors:
   allowOrigins: "*"
 postgres:
