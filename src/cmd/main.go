@@ -4,7 +4,8 @@ import (
 	"github.com/Aliizi83/sample-golang-project/src/api"
 	"github.com/Aliizi83/sample-golang-project/src/config"
 	"github.com/Aliizi83/sample-golang-project/src/infra/cache"
-	"github.com/Aliizi83/sample-golang-project/src/infra/db"
+	"github.com/Aliizi83/sample-golang-project/src/infra/presistence/db"
+	"github.com/Aliizi83/sample-golang-project/src/infra/presistence/migrations"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
 )
 
@@ -22,6 +23,8 @@ func main() {
 	if err := db.InitDB(cfg); err != nil {
 		logger.Fatal(err, logging.Postgres, logging.Startup, err.Error(), nil)
 	}
+
+	migrations.UpP_1()
 	defer db.CloseDB()
 
 	api.InitServer(cfg)

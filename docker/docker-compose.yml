@@ -24,7 +24,7 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     ports:
-      - "80:8081"
+      - "8081:80"
     networks:
       - web_api_network
     depends_on:
