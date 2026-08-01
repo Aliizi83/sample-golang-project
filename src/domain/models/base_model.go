@@ -11,11 +11,11 @@ import (
 const UniqueCodeLength = 8
 
 type BaseModel struct {
-	Id         int           `gorm:"primaryKey"`
+	Id         uint          `gorm:"primaryKey"`
 	Code       string        `gorm:"type:varchar(32);not null;unique"`
 	CreatedAt  time.Time     `gorm:"TIMESTAMP with time zone; not null"`
-	ModifiedAt sql.NullTime  `gorm:"TIMESTAMP with time zone; not null"`
-	DeletedAt  sql.NullTime  `gorm:"TIMESTAMP with time zone; not null"`
+	ModifiedAt sql.NullTime  `gorm:"TIMESTAMP with time zone;null"`
+	DeletedAt  sql.NullTime  `gorm:"TIMESTAMP with time zone;null"`
 	CreatedBy  int           `gorm:"not null"`
 	ModifiedBy sql.NullInt64 `gorm:"null"`
 	DeletedBy  sql.NullInt64 `gorm:"null"`
