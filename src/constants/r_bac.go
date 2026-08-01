@@ -1,5 +1,4 @@
-package constant
-
+package constants
 // User
 const DefaultUserUsername string = "admin"
 const DefaultUserEmail string = "admin@example.com"
