@@ -21,7 +21,8 @@ func InitServer(cfg *config.Config) {
 	r := gin.New()
 	r.Use(middlewares.DefaultStructuredLogger(cfg))
 	r.Use(gin.Logger(), gin.Recovery())
-	RegisterRouters(r)
+	RegisterValidators()
+	RegisterRouters(r, cfg)
 	RegisterSwagger(r, cfg)
 	r.Run(fmt.Sprintf(":%s", cfg.Server.InternalPort))
 }
@@ -34,13 +35,16 @@ func RegisterValidators() {
 	}
 }
 
-func RegisterRouters(r *gin.Engine) {
+func RegisterRouters(r *gin.Engine, cfg *config.Config) {
 	api := r.Group("/api")
 	{
 		v1 := api.Group("/v1")
 		{
 			health := v1.Group("/health")
 			routers.Health(health)
+
+			users := v1.Group("/users")
+			routers.User(users, cfg)
 		}
 
 		v2 := api.Group("/v2")

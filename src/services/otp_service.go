@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/Aliizi83/sample-golang-project/src/common"
 	"github.com/Aliizi83/sample-golang-project/src/config"
@@ -60,7 +61,7 @@ func (s *OtpService) SetOtp(ctx context.Context, mobileNumber string, otp string
 		return &service_errors.ServiceError{EndUserMessage: service_errors.OtpUsed}
 	}
 
-	err = cache.Set(ctx, s.redis, key, otpData, s.cfg.Otp.ExpireTime)
+	err = cache.Set(ctx, s.redis, key, otpData, s.cfg.Otp.ExpireTime*time.Second)
 	if err != nil {
 		return err
 	}
@@ -83,7 +84,7 @@ func (s *OtpService) ValidateOtp(ctx context.Context, mobileNumber string, otp s
 		return &service_errors.ServiceError{EndUserMessage: service_errors.OtpNotValid}
 	} else {
 		res.Used = true
-		err = cache.Set(ctx, s.redis, key, res, s.cfg.Otp.ExpireTime)
+		err = cache.Set(ctx, s.redis, key, res, s.cfg.Otp.ExpireTime*time.Second)
 	}
 	return nil
 }
