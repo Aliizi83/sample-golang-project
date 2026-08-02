@@ -22,8 +22,6 @@ func createTables(database *gorm.DB) {
 		&models.City{},
 		&models.User{},
 		&models.Role{},
-		&models.Permission{},
-		&models.RolePermission{},
 		&models.UserRole{},
 	}
 
