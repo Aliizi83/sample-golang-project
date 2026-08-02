@@ -12,9 +12,10 @@ import (
 )
 
 type UserHandler struct {
-	cfg        *config.Config
-	logger     logging.Logger
-	otpService services.OtpService
+	cfg         *config.Config
+	logger      logging.Logger
+	otpService  services.OtpService
+	userService services.UserService
 }
 
 func NewUserHandler(cfg *config.Config) *UserHandler {
@@ -31,7 +32,7 @@ func (h *UserHandler) SendOtp(c *gin.Context) {
 	req := new(dto.SendOtpRequest)
 	err := c.ShouldBindJSON(req)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, helpers.GenerateBaseResponseWithValidationError(nil, false, -1, err))
+		c.AbortWithStatusJSON(http.StatusBadRequest, helpers.GenerateBaseResponseWithValidationError(nil, false, int(helpers.ValidationError), err))
 		return
 	}
 
@@ -41,5 +42,23 @@ func (h *UserHandler) SendOtp(c *gin.Context) {
 		return
 	}
 
+	c.JSON(http.StatusCreated, helpers.GenerateBaseResponse(nil, true, int(helpers.Success)))
+}
+
+func (h *UserHandler) RegisterUserByUsername(c *gin.Context) {
+	req := new(dto.RegisterUserByUsernameRequest)
+	err := c.ShouldBindJSON(req)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest,
+			helpers.GenerateBaseResponseWithValidationError(nil, false, int(helpers.ValidationError), err))
+		return
+	}
+
+	err = h.userService.RegisterUserByUsername(c.Request.Context(), req.ToRegisterUserByUsername())
+	if err != nil {
+		c.AbortWithStatusJSON(helpers.TranslateErrorToStatusCode(err),
+			helpers.GenerateBaseResponseWithError(err, false, int(helpers.InternalError), err))
+		return
+	}
 	c.JSON(http.StatusCreated, helpers.GenerateBaseResponse(nil, true, int(helpers.Success)))
 }
