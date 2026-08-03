@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/Aliizi83/sample-golang-project/src/config"
+	dependencies "github.com/Aliizi83/sample-golang-project/src/dependenies"
 	"github.com/Aliizi83/sample-golang-project/src/domain/repositories"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/service_errors"
@@ -15,6 +16,17 @@ type UserService struct {
 	cfg        *config.Config
 	logger     logging.Logger
 	repository repositories.UserRepository
+}
+
+func NewUserService(cfg *config.Config) *UserService {
+	logger := logging.NewLogger(cfg)
+	repository := dependencies.GetUserRepository(cfg)
+
+	return &UserService{
+		cfg:        cfg,
+		logger:     logger,
+		repository: repository,
+	}
 }
 
 func (s *UserService) RegisterUserByUsername(ctx context.Context, req dto.RegisterUserByUsername) error {
@@ -50,4 +62,3 @@ func (s *UserService) RegisterUserByUsername(ctx context.Context, req dto.Regist
 	}
 	return nil
 }
-

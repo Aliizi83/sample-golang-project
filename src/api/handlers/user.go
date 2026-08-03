@@ -22,9 +22,10 @@ func NewUserHandler(cfg *config.Config) *UserHandler {
 	logger := logging.NewLogger(cfg)
 
 	return &UserHandler{
-		cfg:        cfg,
-		logger:     logger,
-		otpService: *services.NewOtpService(cfg),
+		cfg:         cfg,
+		logger:      logger,
+		otpService:  *services.NewOtpService(cfg),
+		userService: *services.NewUserService(cfg),
 	}
 }
 
@@ -39,7 +40,6 @@ func NewUserHandler(cfg *config.Config) *UserHandler {
 // @Failure 400 {object} helpers.BaseHttpResponse "Failed"
 // @Failure 409 {object} helpers.BaseHttpResponse "Failed"
 // @Router /v1/users/send-otp [post]
-
 func (h *UserHandler) SendOtp(c *gin.Context) {
 	req := new(dto.SendOtpRequest)
 	err := c.ShouldBindJSON(req)
@@ -57,7 +57,7 @@ func (h *UserHandler) SendOtp(c *gin.Context) {
 	c.JSON(http.StatusCreated, helpers.GenerateBaseResponse(nil, true, int(helpers.Success)))
 }
 
-// SendOtp godoc
+// RegisterUserByUsername godoc
 // @Summary Register user by username and password
 // @Description Register user by username and password
 // @Tags Users
@@ -68,7 +68,6 @@ func (h *UserHandler) SendOtp(c *gin.Context) {
 // @Failure 400 {object} helpers.BaseHttpResponse "Failed"
 // @Failure 409 {object} helpers.BaseHttpResponse "Failed"
 // @Router /v1/users/register-by-username [post]
-
 func (h *UserHandler) RegisterUserByUsername(c *gin.Context) {
 	req := new(dto.RegisterUserByUsernameRequest)
 	err := c.ShouldBindJSON(req)
