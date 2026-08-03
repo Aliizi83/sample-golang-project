@@ -3,10 +3,10 @@ package services
 import (
 	"time"
 
-	"github.com/Aliizi83/sample-golang-project/src/api/dto"
 	"github.com/Aliizi83/sample-golang-project/src/config"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/service_errors"
+	"github.com/Aliizi83/sample-golang-project/src/services/dto"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -37,8 +37,8 @@ func NewTokenService(cfg *config.Config) *TokenService {
 func (s *TokenService) GenerateToken(token *tokenDto) (*dto.TokenDetail, error) {
 	tokenDetail := &dto.TokenDetail{}
 
-	tokenDetail.AccessTokenExpireTime = int(time.Now().Add(s.cfg.JWT.AccessTokenExpireDuration * time.Minute).Unix())
-	tokenDetail.RefreshTokenExpireTime = int(time.Now().Add(s.cfg.JWT.RefreshTokenExpireDuration * time.Minute).Unix())
+	tokenDetail.AccessTokenExpireTime = int64(time.Now().Add(s.cfg.JWT.AccessTokenExpireDuration * time.Minute).Unix())
+	tokenDetail.RefreshTokenExpireTime = int64(time.Now().Add(s.cfg.JWT.RefreshTokenExpireDuration * time.Minute).Unix())
 
 	accessTokenClaims := jwt.MapClaims{}
 

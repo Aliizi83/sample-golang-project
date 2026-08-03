@@ -119,7 +119,13 @@ func (r *PostgresUserRepository) CreateUser(ctx context.Context, u models.User) 
 		r.logger.Error(err, logging.Postgres, logging.Rollback, err.Error(), nil)
 		return user, err
 	}
-	tx.Commit()
+	if err := tx.Commit().Error; err != nil {
+		r.logger.Error(err, logging.Postgres, logging.Rollback, err.Error(), nil)
+		return user, err
+	}
+
+	createdUserRoles := []models.UserRole{*userRoleModel}
+	user.UserRoles = &createdUserRoles
 	return user, nil
 
 }

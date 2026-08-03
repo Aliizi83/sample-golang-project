@@ -1,4 +1,16 @@
 definitions:
+  github_com_Aliizi83_sample-golang-project_src_api_dto.RegisterLoginByMobileRequest:
+    properties:
+      mobileNumber:
+        type: string
+      otp:
+        maxLength: 6
+        minLength: 6
+        type: string
+    required:
+    - mobileNumber
+    - otp
+    type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.RegisterUserByUsernameRequest:
     properties:
       email:
@@ -105,6 +117,36 @@ paths:
           schema:
             $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
       summary: Register user by username and password
+      tags:
+      - Users
+  /v1/users/register-login-by-mobile:
+    post:
+      consumes:
+      - application/json
+      description: First you have to get an OTP from /v1/users/send-otp route
+      parameters:
+      - description: RegisterLoginByMobileRequest
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.RegisterLoginByMobileRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+        "400":
+          description: Failed
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+        "409":
+          description: Failed
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      summary: Register and login user by mobile number
       tags:
       - Users
   /v1/users/send-otp:

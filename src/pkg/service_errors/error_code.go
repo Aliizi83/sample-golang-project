@@ -23,4 +23,7 @@ const (
 
 	// DB
 	RecordNotFound = "record not found"
+
+	// Internal
+	HashFailed = "Bcrypting password failed"
 )
