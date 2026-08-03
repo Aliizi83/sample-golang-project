@@ -1,4 +1,16 @@
 definitions:
+  github_com_Aliizi83_sample-golang-project_src_api_dto.LoginByUsernameRequest:
+    properties:
+      password:
+        minLength: 6
+        type: string
+      username:
+        minLength: 5
+        type: string
+    required:
+    - password
+    - username
+    type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.RegisterLoginByMobileRequest:
     properties:
       mobileNumber:
@@ -89,6 +101,36 @@ paths:
       summary: Health Check
       tags:
       - Health
+  /v1/users/login-by-username-password:
+    post:
+      consumes:
+      - application/json
+      description: Login by username and password
+      parameters:
+      - description: LoginByUsernameRequest
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.LoginByUsernameRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+        "400":
+          description: Failed
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+        "409":
+          description: Failed
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      summary: Login by username and password
+      tags:
+      - Users
   /v1/users/register-by-username:
     post:
       consumes:

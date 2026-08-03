@@ -113,3 +113,30 @@ func (h *UserHandler) RegisterLoginByMobile(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, helpers.GenerateBaseResponse(tokenDetail, true, int(helpers.Success)))
 }
+
+// LoginByUsername godoc
+// @Summary Login by username and password
+// @Description Login by username and password
+// @Tags Users
+// @Accept  json
+// @Produce  json
+// @Param Request body dto.LoginByUsernameRequest true "LoginByUsernameRequest"
+// @Success 201 {object} helpers.BaseHttpResponse "Success"
+// @Failure 400 {object} helpers.BaseHttpResponse "Failed"
+// @Failure 409 {object} helpers.BaseHttpResponse "Failed"
+// @Router /v1/users/login-by-username-password [post]
+func (h *UserHandler) LoginByUsername(c *gin.Context) {
+	req := new(dto.LoginByUsernameRequest)
+	err := c.ShouldBindJSON(req)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest,
+			helpers.GenerateBaseResponseWithValidationError(nil, false, int(helpers.ValidationError), err))
+	}
+
+	tokenDetail, err := h.userService.LoginByUsername(c.Request.Context(), req.Username, req.Password)
+	if err != nil {
+		c.AbortWithStatusJSON(helpers.TranslateErrorToStatusCode(err),
+			helpers.GenerateBaseResponseWithError(nil, false, int(helpers.InternalError), err))
+	}
+	c.JSON(http.StatusCreated, helpers.GenerateBaseResponse(tokenDetail, true, int(helpers.Success)))
+}
