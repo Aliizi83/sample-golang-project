@@ -3,6 +3,7 @@ package seeders
 import (
 	constant "github.com/Aliizi83/sample-golang-project/src/constants"
 	"github.com/Aliizi83/sample-golang-project/src/domain/models"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -24,7 +25,14 @@ func AddDefaultUsers(database *gorm.DB) error {
 		var currentUser models.User
 		var defaultRole models.Role
 
-		err := database.Where(models.User{Username: user.userModel.Username}).
+		bytePass, err := bcrypt.GenerateFromPassword([]byte(user.userModel.Password), bcrypt.DefaultCost)
+		if err != nil {
+			return err
+		}
+
+		user.userModel.Password = string(bytePass)
+
+		err = database.Where(models.User{Username: user.userModel.Username}).
 			FirstOrCreate(&currentUser, user.userModel).Error
 		if err != nil {
 			return err

@@ -81,7 +81,7 @@ func (r *PostgresUserRepository) FetchUserInfo(ctx context.Context, username str
 		return user, err
 	}
 
-	return user, bcrypt.CompareHashAndPassword([]byte(password), []byte(user.Password))
+	return user, bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 }
 
 func (r *PostgresUserRepository) GetUserByUsername(ctx context.Context, username string) (models.User, error) {
