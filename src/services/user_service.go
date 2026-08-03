@@ -85,7 +85,7 @@ func (s *UserService) RegisterAndLoginByMobile(ctx context.Context, mobileNumber
 	}
 
 	if userExists {
-		user, err = s.repository.FetchUserInfo(ctx, user.Username, user.Password)
+		user, err = s.repository.GetUserByUsername(ctx, user.Username)
 		if err != nil {
 			return nil, err
 		}
@@ -101,7 +101,7 @@ func (s *UserService) RegisterAndLoginByMobile(ctx context.Context, mobileNumber
 
 	user.Password = string(hashedPassword)
 	user, err = s.repository.CreateUser(ctx, user)
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 

@@ -82,8 +82,23 @@ func (r *PostgresUserRepository) FetchUserInfo(ctx context.Context, username str
 	}
 
 	return user, bcrypt.CompareHashAndPassword([]byte(password), []byte(user.Password))
-
 }
+
+func (r *PostgresUserRepository) GetUserByUsername(ctx context.Context, username string) (models.User, error) {
+	var user models.User
+	err := r.database.WithContext(ctx).
+		Model(&models.User{}).
+		Where(userFilterExp, username).
+		Preload("UserRoles", func(tx *gorm.DB) *gorm.DB {
+			return tx.Preload("Role")
+		}).
+		Find(&user).Error
+	if err != nil {
+		r.logger.Error(err, logging.Postgres, logging.Select, err.Error(), nil)
+	}
+	return user, err
+}
+
 func (r *PostgresUserRepository) GetDefaultRole(ctx context.Context) (roleId int, err error) {
 	if err = r.database.WithContext(ctx).Model(&models.Role{}).
 		Select("id").
