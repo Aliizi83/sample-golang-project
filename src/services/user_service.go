@@ -112,7 +112,7 @@ func (s *UserService) RegisterAndLoginByMobile(ctx context.Context, mobileNumber
 func (s *UserService) LoginByUsername(ctx context.Context, username, password string) (*dto.TokenDetail, error) {
 	user, err := s.repository.FetchUserInfo(ctx, username, password)
 	if err != nil {
-		return nil, err
+		return nil, &service_errors.ServiceError{EndUserMessage: service_errors.WrongPassword}
 	}
 
 	return s.generateToken(user)
