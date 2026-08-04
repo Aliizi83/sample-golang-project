@@ -103,12 +103,14 @@ func (h *UserHandler) RegisterLoginByMobile(c *gin.Context) {
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest,
 			helpers.GenerateBaseResponseWithValidationError(nil, false, int(helpers.ValidationError), err))
+		return
 	}
 
 	tokenDetail, err := h.userService.RegisterAndLoginByMobile(c.Request.Context(), req.MobileNumber, req.Otp)
 	if err != nil {
 		c.AbortWithStatusJSON(helpers.TranslateErrorToStatusCode(err),
 			helpers.GenerateBaseResponseWithError(nil, false, int(helpers.InternalError), err))
+		return
 	}
 
 	c.JSON(http.StatusCreated, helpers.GenerateBaseResponse(tokenDetail, true, int(helpers.Success)))
@@ -137,6 +139,7 @@ func (h *UserHandler) LoginByUsername(c *gin.Context) {
 	if err != nil {
 		c.AbortWithStatusJSON(helpers.TranslateErrorToStatusCode(err),
 			helpers.GenerateBaseResponseWithError(nil, false, int(helpers.InternalError), err))
+		return
 	}
 	c.JSON(http.StatusCreated, helpers.GenerateBaseResponse(tokenDetail, true, int(helpers.Success)))
 }
