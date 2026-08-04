@@ -20,6 +20,7 @@ const (
 	PermissionDenied          = "Permission denied"
 	UsernameOrPasswordInvalid = "username or password invalid"
 	InvalidRolesFormat        = "invalid roles format"
+	WrongPassword             = "Username or password is wrong"
 
 	// DB
 	RecordNotFound = "record not found"

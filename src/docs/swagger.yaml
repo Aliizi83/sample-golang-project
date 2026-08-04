@@ -370,4 +370,9 @@ paths:
       summary: Send otp to user
       tags:
       - Users
+securityDefinitions:
+  AuthBearer:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
