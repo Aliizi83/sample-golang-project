@@ -2,8 +2,8 @@ package common
 
 import "encoding/json"
 
-func TypeConverter[T any](data any) (*T, error) {
-	var result = new(T)
+func TypeConverter[T any](data any) (T, error) {
+	var result T
 	jsonData, err := json.Marshal(data)
 	if err != nil {
 		return result, err

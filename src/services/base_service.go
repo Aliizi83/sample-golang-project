@@ -2,116 +2,87 @@ package services
 
 import (
 	"context"
-	"database/sql"
-	"time"
 
 	"github.com/Aliizi83/sample-golang-project/src/common"
 	"github.com/Aliizi83/sample-golang-project/src/config"
-	"github.com/Aliizi83/sample-golang-project/src/constants"
-	"github.com/Aliizi83/sample-golang-project/src/infra/presistence/db"
+	"github.com/Aliizi83/sample-golang-project/src/domain/filters"
+	"github.com/Aliizi83/sample-golang-project/src/domain/repositories"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
-	"gorm.io/gorm"
 )
 
 type BaseService[TModel, TCreate, TUpdate, TResponse any] struct {
-	Database *gorm.DB
-	Logger   logging.Logger
+	logger     logging.Logger
+	repository repositories.BaseRepository[TModel]
 }
 
-func NewBaseService[TModel, TCreate, TUpdate, TResponse any](cfg *config.Config) *BaseService[TModel, TCreate, TUpdate, TResponse] {
-	db := db.GetDB()
+func NewBaseService[TModel, TCreate, TUpdate, TResponse any](cfg *config.Config, repository repositories.BaseRepository[TModel]) *BaseService[TModel, TCreate, TUpdate, TResponse] {
 	logger := logging.NewLogger(cfg)
 	return &BaseService[TModel, TCreate, TUpdate, TResponse]{
-		Database: db,
-		Logger:   logger,
+		repository: repository,
+		logger:     logger,
 	}
 }
 
-func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) Create(ctx context.Context, req TCreate) (*TResponse, error) {
-	response := new(TResponse)
+func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) Create(ctx context.Context, req TCreate) (TResponse, error) {
+	var response TResponse
 	model, err := common.TypeConverter[TModel](req)
 	if err != nil {
 		return response, err
 	}
 
-	tx := s.Database.WithContext(ctx).Begin()
-	err = tx.Create(&model).Error
+	model, err = s.repository.Create(ctx, model)
 	if err != nil {
-		s.Logger.Error(err, logging.Postgres, logging.Insert, err.Error(), nil)
-		tx.Rollback()
+		s.logger.Error(err, logging.Postgres, logging.Insert, err.Error(), nil)
 		return response, err
 	}
-	tx.Commit()
 
-	return common.TypeConverter[TResponse](model)
+	response, _ = common.TypeConverter[TResponse](model)
+	return response, nil
 }
 
-func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) Update(ctx context.Context, id int, req TUpdate) (*TResponse, error) {
-	var model TModel
-	response := new(TResponse)
-	updateMap, err := common.TypeConverter[map[string]interface{}](req)
+func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) Update(ctx context.Context, id int, req TUpdate) (TResponse, error) {
+	var response TResponse
+	updateMap, err := common.TypeConverter[map[string]any](req)
 	if err != nil {
-		return response, nil
-	}
-	snakeCaseUpdateMap := make(map[string]any, len(*updateMap))
-
-	for k, v := range *updateMap {
-		snakeCaseUpdateMap[common.ToSnakeCase(k)] = v
-	}
-
-	snakeCaseUpdateMap["modified_at"] = sql.NullTime{Time: time.Now(), Valid: true}
-	snakeCaseUpdateMap["modified_by"] = sql.NullInt64{Int64: int64(s.GetClaims(ctx, constants.UserIdKey).(float64)), Valid: true}
-
-	tx := s.Database.WithContext(ctx).Begin()
-	err = tx.Model(&model).Where("id = ? AND deleted_by IS NULL", id).Updates(snakeCaseUpdateMap).Error
-
-	if err != nil {
-		s.Logger.Error(err, logging.Postgres, logging.Update, err.Error(), nil)
-		tx.Rollback()
+		s.logger.Error(err, logging.General, logging.TypeConverting, err.Error(), nil)
 		return response, err
 	}
-	tx.Commit()
+
+	model, err := s.repository.Update(ctx, id, updateMap)
+
+	if err != nil {
+		return response, err
+	}
+
+	response, err = common.TypeConverter[TResponse](model)
+	if err != nil {
+		s.logger.Error(err, logging.General, logging.TypeConverting, err.Error(), nil)
+		return response, err
+	}
 
 	return s.GetById(ctx, id)
 }
 
 func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) Delete(ctx context.Context, id int) error {
-	var model TModel
-	updateMap := map[string]any{
-		"deleted_at": sql.NullTime{Time: time.Now(), Valid: true},
-		"deleted_by": &sql.NullInt64{Int64: int64(s.GetClaims(ctx, constants.UserIdKey).(float64)), Valid: true},
-	}
-
-	tx := s.Database.WithContext(ctx).Begin()
-	err := tx.Model(&model).Where("id = ? AND deleted_by IS NULL", id).Updates(updateMap).Error
-	if err != nil {
-		s.Logger.Error(err, logging.Postgres, logging.Delete, err.Error(), nil)
-		tx.Rollback()
-		return err
-	}
-	tx.Commit()
-
-	return err
+	return s.repository.Delete(ctx, id)
 }
 
-func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) GetById(ctx context.Context, id int) (*TResponse, error) {
-	var model TModel
-
-	err := s.Database.WithContext(ctx).Where("id = ? AND deleted_by IS NULL", id).First(&model).Error
+func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) GetById(ctx context.Context, id int) (TResponse, error) {
+	var response TResponse
+	model, err := s.repository.GetById(ctx, id)
 	if err != nil {
-		s.Logger.Error(err, logging.Postgres, logging.Select, err.Error(), nil)
-		return nil, err
+		return response, err
 	}
 
 	return common.TypeConverter[TResponse](model)
-
 }
 
-func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) GetClaims(ctx context.Context, key string) any {
-	claims := ctx.Value(constants.ClaimsKey).(map[string]any)
-	value, ok := claims[key]
-	if !ok {
-		return nil
+func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) GetByFilter(ctx context.Context, req filters.PaginationInputWithFilter) (*filters.PagedList[TResponse], error) {
+	var response *filters.PagedList[TResponse]
+	count, models, err := s.repository.GetByFilter(ctx, req)
+	if err != nil {
+		return response, err
 	}
-	return value
+
+	return filters.Paginate[TModel, TResponse](count, models, req.PageNumber, int64(req.PageSize))
 }

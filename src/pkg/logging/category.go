@@ -40,6 +40,8 @@ const (
 
 	// IO
 	RemoveFile SubCategory = "RemoveFile"
+
+	TypeConverting SubCategory = "TypeConverting"
 )
 
 const (
