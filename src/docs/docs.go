@@ -37,7 +37,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CreateAndUpdateCountryRequest"
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CreateUpdateCountryRequest"
                         }
                     }
                 ],
@@ -54,6 +54,60 @@ const docTemplate = `{
                                     "properties": {
                                         "result": {
                                             "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CountryResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/countries/get-by-filters": {
+            "post": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Get Countries",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Countries"
+                ],
+                "summary": "Get Countries",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PaginationInputWithFilter"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Country response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CountryResponse"
                                         }
                                     }
                                 }
@@ -148,7 +202,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CreateAndUpdateCountryRequest"
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CreateUpdateCountryRequest"
                         }
                     }
                 ],
@@ -447,6 +501,20 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_Aliizi83_sample-golang-project_src_api_dto.CompanyResponse": {
+            "type": "object",
+            "properties": {
+                "country": {
+                    "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CountryResponse"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_Aliizi83_sample-golang-project_src_api_dto.CountryResponse": {
             "type": "object",
             "properties": {
@@ -454,6 +522,12 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CityResponse"
+                    }
+                },
+                "companies": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CompanyResponse"
                     }
                 },
                 "id": {
@@ -464,7 +538,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_Aliizi83_sample-golang-project_src_api_dto.CreateAndUpdateCountryRequest": {
+        "github_com_Aliizi83_sample-golang-project_src_api_dto.CreateUpdateCountryRequest": {
             "type": "object",
             "required": [
                 "name"
@@ -587,6 +661,86 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Aliizi83_sample-golang-project_src_domain_filters.Filter": {
+            "type": "object",
+            "properties": {
+                "filterType": {
+                    "type": "string"
+                },
+                "from": {
+                    "type": "string"
+                },
+                "to": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CountryResponse": {
+            "type": "object",
+            "properties": {
+                "hasNextPage": {
+                    "type": "boolean"
+                },
+                "hasPreviousPage": {
+                    "type": "boolean"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CountryResponse"
+                    }
+                },
+                "pageNumber": {
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "type": "integer"
+                },
+                "totalPages": {
+                    "type": "integer"
+                },
+                "totalRows": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_Aliizi83_sample-golang-project_src_domain_filters.PaginationInputWithFilter": {
+            "type": "object",
+            "properties": {
+                "filters": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.Filter"
+                    }
+                },
+                "pageNumber": {
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "type": "integer"
+                },
+                "sorts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.Sort"
+                    }
+                }
+            }
+        },
+        "github_com_Aliizi83_sample-golang-project_src_domain_filters.Sort": {
+            "type": "object",
+            "properties": {
+                "columnId": {
+                    "type": "string"
+                },
+                "sort": {
                     "type": "string"
                 }
             }
