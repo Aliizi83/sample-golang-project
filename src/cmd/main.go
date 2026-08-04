@@ -9,6 +9,9 @@ import (
 	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
 )
 
+// @securityDefinitions.apikey AuthBearer
+// @in header
+// @name Authorization
 func main() {
 
 	cfg := config.GetConfig()
