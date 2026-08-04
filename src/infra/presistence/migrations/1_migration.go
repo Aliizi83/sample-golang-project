@@ -48,5 +48,7 @@ func AddDefaultData(database *gorm.DB) error {
 		return err
 	}
 
+	seeders.CreateCountries(database)
+
 	return nil
 }
