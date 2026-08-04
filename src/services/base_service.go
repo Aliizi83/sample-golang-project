@@ -41,6 +41,7 @@ func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) Create(ctx context.Co
 		tx.Rollback()
 		return response, err
 	}
+	tx.Commit()
 
 	return common.TypeConverter[TResponse](model)
 }
@@ -59,42 +60,44 @@ func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) Update(ctx context.Co
 	}
 
 	snakeCaseUpdateMap["modified_at"] = sql.NullTime{Time: time.Now(), Valid: true}
-	snakeCaseUpdateMap["modified_by"] = &sql.NullInt64{Int64: int64(ctx.Value(constants.UserIdKey).(float64)), Valid: true}
+	snakeCaseUpdateMap["modified_by"] = sql.NullInt64{Int64: int64(s.GetClaims(ctx, constants.UserIdKey).(float64)), Valid: true}
 
 	tx := s.Database.WithContext(ctx).Begin()
-	err = tx.Model(model).Where("id = ? AND deleted_by IS NULL").Updates(snakeCaseUpdateMap).Error
+	err = tx.Model(&model).Where("id = ? AND deleted_by IS NULL", id).Updates(snakeCaseUpdateMap).Error
 
 	if err != nil {
 		s.Logger.Error(err, logging.Postgres, logging.Update, err.Error(), nil)
 		tx.Rollback()
 		return response, err
 	}
+	tx.Commit()
 
-	return response, nil
+	return s.GetById(ctx, id)
 }
 
 func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) Delete(ctx context.Context, id int) error {
-	model := new(TModel)
+	var model TModel
 	updateMap := map[string]any{
-		"modified_at": sql.NullTime{Time: time.Now(), Valid: true},
-		"modified_by": &sql.NullInt64{Int64: int64(ctx.Value(constants.UserIdKey).(float64)), Valid: true},
+		"deleted_at": sql.NullTime{Time: time.Now(), Valid: true},
+		"deleted_by": &sql.NullInt64{Int64: int64(s.GetClaims(ctx, constants.UserIdKey).(float64)), Valid: true},
 	}
 
 	tx := s.Database.WithContext(ctx).Begin()
-	err := tx.Model(model).Where("id = ? AND deleted_by IS NULL").Updates(updateMap).Error
+	err := tx.Model(&model).Where("id = ? AND deleted_by IS NULL", id).Updates(updateMap).Error
 	if err != nil {
 		s.Logger.Error(err, logging.Postgres, logging.Delete, err.Error(), nil)
 		tx.Rollback()
 		return err
 	}
+	tx.Commit()
 
 	return err
 }
 
 func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) GetById(ctx context.Context, id int) (*TResponse, error) {
-	model := new(TModel)
+	var model TModel
 
-	err := s.Database.WithContext(ctx).Where("id = ? AND deleted_by IS NULL").First(model).Error
+	err := s.Database.WithContext(ctx).Where("id = ? AND deleted_by IS NULL", id).First(&model).Error
 	if err != nil {
 		s.Logger.Error(err, logging.Postgres, logging.Select, err.Error(), nil)
 		return nil, err
@@ -102,4 +105,13 @@ func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) GetById(ctx context.C
 
 	return common.TypeConverter[TResponse](model)
 
+}
+
+func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) GetClaims(ctx context.Context, key string) any {
+	claims := ctx.Value(constants.ClaimsKey).(map[string]any)
+	value, ok := claims[key]
+	if !ok {
+		return nil
+	}
+	return value
 }

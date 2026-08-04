@@ -21,12 +21,12 @@ definitions:
     type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.CreateAndUpdateCountryRequest:
     properties:
-      string:
+      name:
         maxLength: 20
         minLength: 3
         type: string
     required:
-    - string
+    - name
     type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.LoginByUsernameRequest:
     properties:

@@ -467,10 +467,10 @@ const docTemplate = `{
         "github_com_Aliizi83_sample-golang-project_src_api_dto.CreateAndUpdateCountryRequest": {
             "type": "object",
             "required": [
-                "string"
+                "name"
             ],
             "properties": {
-                "string": {
+                "name": {
                     "type": "string",
                     "maxLength": 20,
                     "minLength": 3

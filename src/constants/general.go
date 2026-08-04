@@ -14,6 +14,7 @@ const (
 	MobileNumberKey        string = "MobileNumber"
 	RolesKey               string = "Roles"
 	ExpireTimeKey          string = "Exp"
+	ClaimsKey              string = "UserClaims"
 
 	// JWT
 	RefreshTokenCookieName string = "refresh_token"

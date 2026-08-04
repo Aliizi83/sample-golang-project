@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"strings"
@@ -19,7 +20,7 @@ func Authentication(cfg *config.Config) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		var err error
-		claimMaps := map[string]interface{}{}
+		claimMaps := map[string]any{}
 		auth := c.GetHeader(constants.AuthorizationHeaderKey)
 		token := strings.Split(auth, " ")
 		if auth == "" || len(token) < 2 {
@@ -36,7 +37,7 @@ func Authentication(cfg *config.Config) gin.HandlerFunc {
 			}
 		}
 
-		if err != nil {
+		if err != nil || int64(claimMaps[constants.UserIdKey].(float64)) == 0 {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, helpers.GenerateBaseResponseWithError(
 				nil, false, int(helpers.AuthError), err,
 			))
@@ -51,6 +52,9 @@ func Authentication(cfg *config.Config) gin.HandlerFunc {
 		c.Set(constants.MobileNumberKey, claimMaps[constants.MobileNumberKey])
 		c.Set(constants.RolesKey, claimMaps[constants.RolesKey])
 		c.Set(constants.ExpireTimeKey, claimMaps[constants.ExpireTimeKey])
+
+		requestContext := context.WithValue(c.Request.Context(), constants.ClaimsKey, claimMaps)
+		c.Request = c.Request.WithContext(requestContext)
 
 		c.Next()
 	}

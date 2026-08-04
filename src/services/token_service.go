@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/Aliizi83/sample-golang-project/src/config"
+	"github.com/Aliizi83/sample-golang-project/src/constants"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/service_errors"
 	"github.com/Aliizi83/sample-golang-project/src/services/dto"
@@ -42,14 +43,14 @@ func (s *TokenService) GenerateToken(token *tokenDto) (*dto.TokenDetail, error) 
 
 	accessTokenClaims := jwt.MapClaims{}
 
-	accessTokenClaims["user_id"] = token.UserId
-	accessTokenClaims["first_name"] = token.FirstName
-	accessTokenClaims["last_name"] = token.LastName
-	accessTokenClaims["username"] = token.Username
-	accessTokenClaims["email"] = token.Email
-	accessTokenClaims["mobile_number"] = token.MobileNumber
-	accessTokenClaims["roles"] = token.Roles
-	accessTokenClaims["exp"] = tokenDetail.AccessTokenExpireTime
+	accessTokenClaims[constants.UserIdKey] = token.UserId
+	accessTokenClaims[constants.FirstNameKey] = token.FirstName
+	accessTokenClaims[constants.LastNameKey] = token.LastName
+	accessTokenClaims[constants.UsernameKey] = token.Username
+	accessTokenClaims[constants.EmailKey] = token.Email
+	accessTokenClaims[constants.MobileNumberKey] = token.MobileNumber
+	accessTokenClaims[constants.RolesKey] = token.Roles
+	accessTokenClaims[constants.ExpireTimeKey] = tokenDetail.AccessTokenExpireTime
 
 	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, accessTokenClaims)
 

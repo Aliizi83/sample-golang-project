@@ -119,7 +119,14 @@ func (s *UserService) LoginByUsername(ctx context.Context, username, password st
 }
 
 func (s *UserService) generateToken(user models.User) (*dto.TokenDetail, error) {
-	tokenDto := tokenDto{FirstName: user.FirstName, LastName: user.LastName, Username: user.Username, Email: user.Email}
+	tokenDto := tokenDto{
+		UserId:       int(user.Id),
+		FirstName:    user.FirstName,
+		LastName:     user.LastName,
+		Username:     user.Username,
+		Email:        user.Email,
+		MobileNumber: user.MobileNumber,
+	}
 
 	if len(*user.UserRoles) > 0 {
 		for _, v := range *user.UserRoles {
