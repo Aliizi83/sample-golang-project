@@ -2,7 +2,6 @@ package postgres_repositories
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"time"
 
@@ -52,8 +51,9 @@ func (r *BaseRepository[TModel]) Update(ctx context.Context, id int, updateField
 		snakeUpdateFields[common.ToSnakeCase(k)] = v
 	}
 
-	snakeUpdateFields["modified_by"] = &sql.NullInt64{Int64: int64(r.getClaims(ctx, constants.UserIdKey).(float64)), Valid: true}
-	snakeUpdateFields["modified_at"] = sql.NullTime{Valid: true, Time: time.Now().UTC()}
+	userId := int64(r.getClaims(ctx, constants.UserIdKey).(float64))
+	snakeUpdateFields["modified_by"] = userId
+	snakeUpdateFields["modified_at"] = time.Now().UTC()
 
 	if err := tx.Model(&model).Where(softDeleteExp, id).Updates(snakeUpdateFields).Error; err != nil {
 		tx.Rollback()
@@ -69,10 +69,11 @@ func (r *BaseRepository[TModel]) Delete(ctx context.Context, id int) error {
 	tx := r.database.WithContext(ctx).Begin()
 	updateFields := make(map[string]any)
 
-	updateFields["deleted_by"] = &sql.NullInt64{Int64: int64(r.getClaims(ctx, constants.UserIdKey).(float64)), Valid: true}
-	updateFields["deleted_at"] = sql.NullTime{Valid: true, Time: time.Now().UTC()}
+	userId := int64(r.getClaims(ctx, constants.UserIdKey).(float64))
+	updateFields["deleted_by"] = userId
+	updateFields["deleted_at"] = time.Now().UTC()
 
-	if err := tx.Model(&model).Delete(softDeleteExp, id).Updates(updateFields).Error; err != nil {
+	if err := tx.Model(&model).Where(softDeleteExp, id).Updates(updateFields).Error; err != nil {
 		tx.Rollback()
 		modelName := common.GetTypeName[TModel]()
 		r.logger.Error(err, logging.Postgres, logging.Update, fmt.Sprintf("error while deleting %s : %s ", modelName, err.Error()), nil)

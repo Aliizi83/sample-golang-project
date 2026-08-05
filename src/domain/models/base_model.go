@@ -1,9 +1,10 @@
 package models
 
 import (
-	"database/sql"
+	"context"
 	"time"
 
+	"github.com/Aliizi83/sample-golang-project/src/constants"
 	"github.com/Aliizi83/sample-golang-project/src/domain/helpers"
 	"gorm.io/gorm"
 )
@@ -11,23 +12,18 @@ import (
 const UniqueCodeLength = 8
 
 type BaseModel struct {
-	Id         uint          `gorm:"primaryKey"`
-	Code       string        `gorm:"type:varchar(32);not null;unique"`
-	CreatedAt  time.Time     `gorm:"TIMESTAMP with time zone; not null"`
-	ModifiedAt sql.NullTime  `gorm:"TIMESTAMP with time zone;null"`
-	DeletedAt  sql.NullTime  `gorm:"TIMESTAMP with time zone;null"`
-	CreatedBy  int           `gorm:"not null"`
-	ModifiedBy sql.NullInt64 `gorm:"null"`
-	DeletedBy  sql.NullInt64 `gorm:"null"`
+	Id         uint       `gorm:"primaryKey"`
+	Code       string     `gorm:"type:varchar(32);not null;unique"`
+	CreatedAt  time.Time  `gorm:"TIMESTAMP with time zone; not null"`
+	ModifiedAt *time.Time `gorm:"TIMESTAMP with time zone;default:null"`
+	DeletedAt  *time.Time `gorm:"TIMESTAMP with time zone;default:null"`
+	CreatedBy  int        `gorm:"not null"`
+	ModifiedBy *int       `gorm:"default:null"`
+	DeletedBy  *int       `gorm:"default:null"`
 }
 
 func (m *BaseModel) BeforeCreate(tx *gorm.DB) error {
-	value := tx.Statement.Context.Value("UserId")
-	userId := -1
-
-	if value != nil {
-		userId = int(value.(float64))
-	}
+	userId := m.getUserIdFromClaims(tx.Statement.Context)
 	m.Code = helpers.GenerateRandomString(UniqueCodeLength)
 	m.CreatedAt = time.Now()
 	m.CreatedBy = userId
@@ -35,27 +31,33 @@ func (m *BaseModel) BeforeCreate(tx *gorm.DB) error {
 }
 
 func (m *BaseModel) BeforeUpdate(tx *gorm.DB) error {
-	value := tx.Statement.Context.Value("UserId")
-	userId := &sql.NullInt64{Valid: false}
-
-	if value != nil {
-		userId = &sql.NullInt64{Valid: true, Int64: int64(value.(float64))}
-	}
-
-	m.ModifiedAt = sql.NullTime{Time: time.Now().UTC(), Valid: true}
-	m.ModifiedBy = *userId
+	now := time.Now().UTC()
+	userId := m.getUserIdFromClaims(tx.Statement.Context)
+	m.ModifiedAt = &now
+	m.ModifiedBy = &userId
 	return nil
 }
 
 func (m *BaseModel) BeforeDelete(tx *gorm.DB) error {
-	value := tx.Statement.Context.Value("UserId")
-	userId := &sql.NullInt64{Valid: false}
+	now := time.Now().UTC()
+	userId := m.getUserIdFromClaims(tx.Statement.Context)
 
-	if value != nil {
-		userId = &sql.NullInt64{Valid: true, Int64: int64(value.(float64))}
-	}
-
-	m.DeletedAt = sql.NullTime{Time: time.Now().UTC(), Valid: true}
-	m.DeletedBy = *userId
+	m.DeletedAt = &now
+	m.DeletedBy = &userId
 	return nil
+}
+
+func (m *BaseModel) getUserIdFromClaims(ctx context.Context) int {
+	userId := -1
+	claimsVal := ctx.Value(constants.ClaimsKey)
+	if claimsVal != nil {
+		claimsMap := claimsVal.(map[string]any)
+		value, ok := claimsMap[constants.UserIdKey]
+		if !ok {
+			return userId
+		}
+
+		userId = int(value.(float64))
+	}
+	return userId
 }
