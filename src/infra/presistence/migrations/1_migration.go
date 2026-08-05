@@ -18,11 +18,26 @@ func UpP_1() {
 
 func createTables(database *gorm.DB) {
 	modelsToMigrate := []interface{}{
-		&models.Country{},
-		&models.City{},
-		&models.User{},
-		&models.Role{},
-		&models.UserRole{},
+		models.Country{},
+		models.City{},
+		models.File{},
+		models.PersianYear{},
+		models.PropertyCategory{},
+		models.Property{},
+		models.User{},
+		models.Role{},
+		models.UserRole{},
+		models.Company{},
+		models.Gearbox{},
+		models.Color{},
+		models.CarType{},
+		models.CarModel{},
+		models.CarModelColor{},
+		models.CarModelYear{},
+		models.CarModelImage{},
+		models.CarModelPriceHistory{},
+		models.CarModelProperty{},
+		models.CarModelComment{},
 	}
 
 	err := database.AutoMigrate(modelsToMigrate...)
