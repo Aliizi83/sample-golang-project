@@ -32,6 +32,18 @@ definitions:
       name:
         type: string
     type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCityRequest:
+    properties:
+      countryId:
+        type: integer
+      name:
+        maxLength: 20
+        minLength: 3
+        type: string
+    required:
+    - countryId
+    - name
+    type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.CreateUpdateCountryRequest:
     properties:
       name:
@@ -97,6 +109,15 @@ definitions:
     required:
     - mobileNumber
     type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCityRequest:
+    properties:
+      countryId:
+        type: integer
+      name:
+        maxLength: 20
+        minLength: 3
+        type: string
+    type: object
   github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse:
     properties:
       error: {}
@@ -131,6 +152,25 @@ definitions:
         type: string
       type:
         type: string
+    type: object
+  ? github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CityResponse
+  : properties:
+      hasNextPage:
+        type: boolean
+      hasPreviousPage:
+        type: boolean
+      items:
+        items:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CityResponse'
+        type: array
+      pageNumber:
+        type: integer
+      pageSize:
+        type: integer
+      totalPages:
+        type: integer
+      totalRows:
+        type: integer
     type: object
   ? github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CountryResponse
   : properties:
@@ -176,6 +216,157 @@ definitions:
 info:
   contact: {}
 paths:
+  /v1/cities/:
+    post:
+      consumes:
+      - application/json
+      description: Create a city
+      parameters:
+      - description: Create a city
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCityRequest'
+      responses:
+        "201":
+          description: City response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CityResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Create a city
+      tags:
+      - Cities
+  /v1/cities/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a city
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: response
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Delete a city
+      tags:
+      - Cities
+    get:
+      consumes:
+      - application/json
+      description: Get a city
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: city response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CityResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get a city
+      tags:
+      - Cities
+    put:
+      consumes:
+      - application/json
+      description: Update a city
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update a city
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCityRequest'
+      responses:
+        "201":
+          description: City response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CityResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Update a city
+      tags:
+      - Cities
+  /v1/cities/get-by-filters:
+    post:
+      consumes:
+      - application/json
+      description: Get Cities
+      parameters:
+      - description: Request
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PaginationInputWithFilter'
+      responses:
+        "200":
+          description: City response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CityResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get Cities
+      tags:
+      - Cities
   /v1/countries/:
     post:
       consumes:

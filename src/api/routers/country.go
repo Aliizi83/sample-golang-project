@@ -13,5 +13,5 @@ func Countries(r *gin.RouterGroup, cfg *config.Config) {
 	r.PUT("/:id", h.Update)
 	r.DELETE("/:id", h.Delete)
 	r.GET("/:id", h.GetById)
-	r.GET("/get-by-filters", h.GetByFilter)
+	r.GET("/get-by-filters", h.GetByFilters)
 }

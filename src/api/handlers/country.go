@@ -101,6 +101,6 @@ func (h *CountryHandler) GetById(c *gin.Context) {
 // @Failure 400 {object} helpers.BaseHttpResponse "Bad request"
 // @Router /v1/countries/get-by-filters [post]
 // @Security AuthBearer
-func (h *CountryHandler) GetByFilter(c *gin.Context) {
+func (h *CountryHandler) GetByFilters(c *gin.Context) {
 	GetByFilter(c, dto.ToCountryResponse, h.countryService.GetByFilter)
 }

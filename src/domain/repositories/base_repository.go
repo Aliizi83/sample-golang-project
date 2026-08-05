@@ -18,3 +18,7 @@ type BaseRepository[TModel any] interface {
 type CountryRepository interface {
 	BaseRepository[models.Country]
 }
+
+type CityResponse interface {
+	BaseRepository[models.City]
+}

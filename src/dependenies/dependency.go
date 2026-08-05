@@ -15,3 +15,7 @@ func GetUserRepository(cfg *config.Config) repositories.UserRepository {
 func GetCountryRepository(cfg *config.Config) repositories.BaseRepository[models.Country] {
 	return postgres_repositories.NewBaseRepository[models.Country](cfg, []db.PreloadEntity{{Entity: "Cities"}, {Entity: "Companies"}})
 }
+
+func GetCityRepository(cfg *config.Config) repositories.BaseRepository[models.City] {
+	return postgres_repositories.NewBaseRepository[models.City](cfg, []db.PreloadEntity{{Entity: "Country"}})
+}

@@ -4,6 +4,263 @@
         "contact": {}
     },
     "paths": {
+        "/v1/cities/": {
+            "post": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Create a city",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Create a city",
+                "parameters": [
+                    {
+                        "description": "Create a city",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCityRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "City response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CityResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/cities/get-by-filters": {
+            "post": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Get Cities",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Get Cities",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PaginationInputWithFilter"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "City response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CityResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/cities/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Get a city",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Get a city",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "city response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CityResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Update a city",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Update a city",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update a city",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCityRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "City response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CityResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Delete a city",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Delete a city",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "response",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/countries/": {
             "post": {
                 "security": [
@@ -527,6 +784,23 @@
                 }
             }
         },
+        "github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCityRequest": {
+            "type": "object",
+            "required": [
+                "countryId",
+                "name"
+            ],
+            "properties": {
+                "countryId": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 3
+                }
+            }
+        },
         "github_com_Aliizi83_sample-golang-project_src_api_dto.CreateUpdateCountryRequest": {
             "type": "object",
             "required": [
@@ -618,6 +892,19 @@
                 }
             }
         },
+        "github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCityRequest": {
+            "type": "object",
+            "properties": {
+                "countryId": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 3
+                }
+            }
+        },
         "github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse": {
             "type": "object",
             "properties": {
@@ -668,6 +955,35 @@
                 },
                 "type": {
                     "type": "string"
+                }
+            }
+        },
+        "github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CityResponse": {
+            "type": "object",
+            "properties": {
+                "hasNextPage": {
+                    "type": "boolean"
+                },
+                "hasPreviousPage": {
+                    "type": "boolean"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CityResponse"
+                    }
+                },
+                "pageNumber": {
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "type": "integer"
+                },
+                "totalPages": {
+                    "type": "integer"
+                },
+                "totalRows": {
+                    "type": "integer"
                 }
             }
         },
