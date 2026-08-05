@@ -13,5 +13,5 @@ func Cities(r *gin.RouterGroup, cfg *config.Config) {
 	r.PUT("/:id", cityHandler.Update)
 	r.DELETE("/:id", cityHandler.Delete)
 	r.GET("/:id", cityHandler.GetById)
-	r.GET("/get-by-filters", cityHandler.GetByFilters)
+	r.POST("/get-by-filters", cityHandler.GetByFilters)
 }
