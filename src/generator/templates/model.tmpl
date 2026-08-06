@@ -4,3 +4,7 @@ type {{.Entity}} struct {
 	BaseModel
     // Add other fields here
 }
+
+func init(){
+    RegisterModel(&{{.Entity}}{})
+}
