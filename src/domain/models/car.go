@@ -89,3 +89,16 @@ type CarModelComment struct {
 	UserId     int
 	Message    string `gorm:"size:500,type:string;not null"`
 }
+
+func init() {
+	RegisterModel(&Gearbox{})
+	RegisterModel(&CarType{})
+	RegisterModel(&Company{})
+	RegisterModel(&CarModel{})
+	RegisterModel(&CarModelColor{})
+	RegisterModel(&CarModelYear{})
+	RegisterModel(&CarModelImage{})
+	RegisterModel(&CarModelPriceHistory{})
+	RegisterModel(&CarModelProperty{})
+	RegisterModel(&CarModelComment{})
+}

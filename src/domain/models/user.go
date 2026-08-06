@@ -11,3 +11,7 @@ type User struct {
 	Enabled      bool   `gorm:"type:bool;default:true"`
 	UserRoles    *[]UserRole
 }
+
+func init() {
+	RegisterModel(&User{})
+}

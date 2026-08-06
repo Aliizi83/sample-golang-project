@@ -39,3 +39,11 @@ type File struct {
 	Description string `gorm:"size:500;type:string;not null"`
 	MimeType    string `gorm:"size:20;type:string;not null"`
 }
+
+func init() {
+	RegisterModel(&Country{})
+	RegisterModel(&City{})
+	RegisterModel(&PersianYear{})
+	RegisterModel(&Color{})
+	RegisterModel(&File{})
+}

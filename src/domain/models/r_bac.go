@@ -13,3 +13,8 @@ type UserRole struct {
 	UserId uint
 	RoleId uint
 }
+
+func init() {
+	RegisterModel(&Role{})
+	RegisterModel(&UserRole{})
+}

@@ -17,3 +17,9 @@ type Property struct {
 	DataType    string `gorm:"size:15;type:string;not null,unique;"`
 	Unit        string `gorm:"size:15;type:string;not null,unique;"`
 }
+
+func init() {
+	RegisterModel(&PropertyCategory{})
+	RegisterModel(&Property{})
+
+}
