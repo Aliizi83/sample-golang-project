@@ -22,7 +22,7 @@ func Create[TRequest, TServiceInput, TServiceOutput, TResponse any](
 
 ) {
 	request := new(TRequest)
-	err := c.ShouldBindJSON(&request)
+	err := c.ShouldBind(&request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest,
 			helpers.GenerateBaseResponseWithValidationError(nil, false, int(helpers.ValidationError), err))

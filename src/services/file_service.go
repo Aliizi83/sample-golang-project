@@ -46,7 +46,7 @@ func (s *FileService) Delete(ctx context.Context, id int) error {
 		return err
 	}
 
-	err = os.Remove(fmt.Sprintf("%s/%s", file.Description, file.Name))
+	err = os.Remove(fmt.Sprintf("%s/%s", file.Directory, file.Name))
 	if err != nil {
 		s.logger.Error(err, logging.IO, logging.RemoveFile, err.Error(), nil)
 	}
@@ -56,7 +56,8 @@ func (s *FileService) Delete(ctx context.Context, id int) error {
 
 func (s *FileService) uploadAndSaveFile(file *multipart.FileHeader, directory string) (string, error) {
 	randFileName := uuid.New()
-	err := os.Mkdir(directory, os.ModePerm)
+
+	err := os.MkdirAll(directory, os.ModePerm)
 	if err != nil {
 		return "", err
 	}

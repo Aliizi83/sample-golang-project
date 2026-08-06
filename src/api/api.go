@@ -51,6 +51,9 @@ func RegisterRouters(r *gin.Engine, cfg *config.Config) {
 
 			cities := v1.Group("/cities", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
 			routers.Cities(cities, cfg)
+
+			files := v1.Group("/files", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
+			routers.Files(files, cfg)
 		}
 	}
 }
