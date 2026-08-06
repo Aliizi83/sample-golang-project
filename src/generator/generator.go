@@ -195,15 +195,58 @@ func toPascalCase(input string) string {
 }
 
 func splitWords(input string) []string {
-	cleaned := strings.ReplaceAll(strings.ReplaceAll(input, "_", " "), "-", " ")
-	parts := regexp.MustCompile(`[A-Z]+(?=[A-Z][a-z]|[0-9]|$)|[A-Z]?[a-z]+|[A-Z]+|[0-9]+`).FindAllString(cleaned, -1)
-	result := make([]string, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed != "" {
-			result = append(result, trimmed)
-		}
+	cleaned := strings.NewReplacer("_", " ", "-", " ").Replace(input)
+	runes := []rune(cleaned)
+	if len(runes) == 0 {
+		return []string{}
 	}
+
+	result := make([]string, 0, len(runes))
+	var current []rune
+
+	flush := func() {
+		if len(current) == 0 {
+			return
+		}
+		result = append(result, string(current))
+		current = nil
+	}
+
+	for i, r := range runes {
+		if unicode.IsSpace(r) {
+			flush()
+			continue
+		}
+
+		var next rune
+		if i+1 < len(runes) {
+			next = runes[i+1]
+		}
+
+		if len(current) > 0 {
+			prev := current[len(current)-1]
+			shouldSplit := false
+			switch {
+			case unicode.IsUpper(r) && unicode.IsLower(prev):
+				shouldSplit = true
+			case unicode.IsLower(r) && unicode.IsUpper(prev) && len(current) > 1:
+				shouldSplit = true
+			case unicode.IsDigit(r) && unicode.IsLetter(prev):
+				shouldSplit = true
+			case unicode.IsLetter(r) && unicode.IsDigit(prev):
+				shouldSplit = true
+			case unicode.IsUpper(r) && unicode.IsUpper(prev) && unicode.IsLower(next):
+				shouldSplit = true
+			}
+			if shouldSplit {
+				flush()
+			}
+		}
+
+		current = append(current, r)
+	}
+
+	flush()
 	return result
 }
 
