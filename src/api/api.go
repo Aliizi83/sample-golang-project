@@ -43,17 +43,9 @@ func RegisterRouters(r *gin.Engine, cfg *config.Config) {
 			health := v1.Group("/health")
 			routers.Health(health)
 
-			users := v1.Group("/users")
-			routers.User(users, cfg)
-
-			countries := v1.Group("/countries", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
-			routers.Countries(countries, cfg)
-
-			cities := v1.Group("/cities", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
-			routers.Cities(cities, cfg)
-
-			files := v1.Group("/files", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
-			routers.Files(files, cfg)
+			for _, routerFunction := range routers.RegisteredRoutes {
+				routerFunction(v1, cfg)
+			}
 		}
 	}
 }
