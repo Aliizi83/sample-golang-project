@@ -23,11 +23,11 @@ const (
 )
 
 type generatorData struct {
-	EntityName           string
-	CamelCasedEntityName string
-	SnakeCasedEntityName string
-	PluralName           string
-	CamelCasedPluralName string
+	Entity            string
+	CamelEntity       string
+	SnakeEntity       string
+	EntityPlural      string
+	CamelEntityPlural string
 }
 
 func main() {
@@ -42,36 +42,51 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 
 	data := generatorData{
-		EntityName:           resolveField(reader, "EntityName", *entityFlag, "UserProfile"),
-		CamelCasedEntityName: resolveField(reader, "camelCasedEntityName", *camelEntityFlag, "userProfile"),
-		SnakeCasedEntityName: resolveField(reader, "snake_cased_entity_name", *snakeCaseEntityFlag, "user_profile"),
-		PluralName:           resolveField(reader, "PluralName", *pluralFlag, "UserProfiles"),
-		CamelCasedPluralName: resolveField(reader, "camelCasedPluralName", *camelPluralFlag, "userProfiles"),
+		Entity:            resolveField(reader, "EntityName", *entityFlag, "UserProfile"),
+		CamelEntity:       resolveField(reader, "camelCasedEntityName", *camelEntityFlag, "userProfile"),
+		SnakeEntity:       resolveField(reader, "snake_cased_entity_name", *snakeCaseEntityFlag, "user_profile"),
+		EntityPlural:      resolveField(reader, "PluralName", *pluralFlag, "UserProfiles"),
+		CamelEntityPlural: resolveField(reader, "camelCasedPluralName", *camelPluralFlag, "userProfiles"),
 	}
 
 	// Domain Layer
-	buildGoFilesFromTemplate("./templates/model.tmpl", "../domain/models", data.SnakeCasedEntityName, model, data)
-	appendCodeToGoFileFromTemplate("./templates/repository.tmpl", "../domain/repositories/repositories.go", data)
+	if err := buildGoFilesFromTemplate("./templates/model.tmpl", "../domain/models", data.SnakeEntity, model, data); err != nil {
+		fmt.Println(err)
+	}
+	if err := appendCodeToGoFileFromTemplate("./templates/repository.tmpl", "../domain/repositories/base_repository.go", data); err != nil {
+		fmt.Println(err)
+	}
 
 	// Dependency Injection
-	appendCodeToGoFileFromTemplate("./templates/dependency.tmpl", "../dependencies/dependency.go", data)
+	if err := appendCodeToGoFileFromTemplate("./templates/dependency.tmpl", "../dependencies/dependency.go", data); err != nil {
+		fmt.Println(err)
+	}
 
 	// Service Layer
-	buildGoFilesFromTemplate("./templates/service_dto.tmpl", "../services/dto", data.SnakeCasedEntityName, dto, data)
-	buildGoFilesFromTemplate("./templates/service.tmpl", "../services", data.SnakeCasedEntityName, service, data)
+	if err := buildGoFilesFromTemplate("./templates/service_dto.tmpl", "../services/dto", data.SnakeEntity, dto, data); err != nil {
+		fmt.Println(err)
+	}
+	if err := buildGoFilesFromTemplate("./templates/service.tmpl", "../services", data.SnakeEntity, service, data); err != nil {
+		fmt.Println(err)
+	}
 
 	// Api Layer
-	buildGoFilesFromTemplate("./templates/api_dto.tmpl", "../api/dto", data.SnakeCasedEntityName, dto, data)
-	buildGoFilesFromTemplate("./templates/handler.tmpl", "../api/handlers", data.SnakeCasedEntityName, handler, data)
-	buildGoFilesFromTemplate("./templates/router.tmpl", "../api/routers", data.SnakeCasedEntityName, router, data)
-
+	if err := buildGoFilesFromTemplate("./templates/api_dto.tmpl", "../api/dto", data.SnakeEntity, dto, data); err != nil {
+		fmt.Println(err)
+	}
+	if err := buildGoFilesFromTemplate("./templates/handler.tmpl", "../api/handlers", data.SnakeEntity, handler, data); err != nil {
+		fmt.Println(err)
+	}
+	if err := buildGoFilesFromTemplate("./templates/router.tmpl", "../api/routers", data.SnakeEntity, router, data); err != nil {
+		fmt.Println(err)
+	}
 }
 
 func resolveField(reader *bufio.Reader, fieldName, flagValue, example string) string {
 	if flagValue != "" {
 		err := validateInput(flagValue)
-		if err != nil {
-			fmt.Printf("Using flag value for %s: %s\n", fieldName, flagValue)
+		if err == nil {
+			fmt.Printf("✔ Using flag value for %s: %s\n", fieldName, flagValue)
 			return flagValue
 		}
 		fmt.Printf("Invalid flag passed for %s (%s). Falling back to prompt...\n", fieldName, err)
@@ -95,9 +110,9 @@ func validateInput(input string) error {
 		return errors.New("input cannot be empty")
 	}
 
-	matched, _ := regexp.MatchString("^[a-zA-Z]+$", input)
+	matched, _ := regexp.MatchString("^[a-zA-Z_]+$", input)
 	if !matched {
-		return errors.New("must contain only English letters (no numbers, spaces, or special characters)")
+		return errors.New("must contain only English letters and underscores")
 	}
 
 	return nil
@@ -113,20 +128,21 @@ func buildGoFilesFromTemplate(templatePath, dstFolder, fileName string, codeType
 		return err
 	}
 
-	formattedFileName := fmt.Sprintf(string(codeType), data.SnakeCasedEntityName)
-	fullPathFile := fmt.Sprintf("%s/%s.go", dstFolder, formattedFileName)
+	formattedFileName := fmt.Sprintf(string(codeType), fileName)
+	fullPathFile := fmt.Sprintf("%s/%s", dstFolder, formattedFileName)
 
 	outputFile, err := os.Create(fullPathFile)
 	if err != nil {
 		return err
 	}
 	defer outputFile.Close()
+
 	err = tmpl.Execute(outputFile, data)
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("Successfully loaded %s file of type ( %s )", fullPathFile, codeType)
+	fmt.Printf("Successfully loaded %s file of type ( %s )\n", fullPathFile, codeType)
 	return nil
 }
 
