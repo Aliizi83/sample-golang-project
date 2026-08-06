@@ -12,6 +12,7 @@ import (
 	"text/template"
 	"unicode"
 
+	"github.com/jinzhu/inflection"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
@@ -42,7 +43,7 @@ func main() {
 	entityName := resolveField(reader, "EntityName", *entityFlag, "UserProfile")
 
 	data := generatorData{
-		Entity:            entityName,
+		Entity:            toPascalCase(entityName),
 		CamelEntity:       toCamelCase(entityName),
 		SnakeEntity:       toSnakeCase(entityName),
 		EntityPlural:      toPlural(entityName),
@@ -157,26 +158,40 @@ func toPlural(input string) string {
 		return ""
 	}
 
-	if strings.HasSuffix(trimmed, "s") || strings.HasSuffix(trimmed, "x") || strings.HasSuffix(trimmed, "z") || strings.HasSuffix(trimmed, "ch") || strings.HasSuffix(trimmed, "sh") {
-		return trimmed + "es"
+	words := splitWords(trimmed)
+	if len(words) == 0 {
+		return ""
 	}
 
-	if strings.HasSuffix(trimmed, "y") && len(trimmed) > 1 {
-		last := rune(trimmed[len(trimmed)-2])
-		if unicode.IsLetter(last) && !isVowel(last) {
-			return trimmed[:len(trimmed)-1] + "ies"
-		}
+	lastWord := strings.ToLower(words[len(words)-1])
+	pluralLastWord := inflection.Plural(lastWord)
+
+	if len(words) == 1 {
+		return toPascalCase(pluralLastWord)
 	}
 
-	if strings.HasSuffix(trimmed, "fe") {
-		return trimmed[:len(trimmed)-2] + "ves"
+	prefixWords := words[:len(words)-1]
+	parts := make([]string, 0, len(prefixWords)+1)
+	for _, word := range prefixWords {
+		parts = append(parts, word)
+	}
+	parts = append(parts, pluralLastWord)
+
+	return toPascalCase(strings.Join(parts, "_"))
+}
+
+func toPascalCase(input string) string {
+	words := splitWords(input)
+	if len(words) == 0 {
+		return ""
 	}
 
-	if strings.HasSuffix(trimmed, "f") {
-		return trimmed[:len(trimmed)-1] + "ves"
+	parts := make([]string, 0, len(words))
+	for _, word := range words {
+		parts = append(parts, cases.Title(language.Und).String(strings.ToLower(word)))
 	}
 
-	return trimmed + "s"
+	return strings.Join(parts, "")
 }
 
 func splitWords(input string) []string {
