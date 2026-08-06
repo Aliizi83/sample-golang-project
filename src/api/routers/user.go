@@ -18,7 +18,7 @@ func user(router *gin.RouterGroup, cfg *config.Config) {
 
 func init() {
 	RegisterRoute(func(v1 *gin.RouterGroup, cfg *config.Config) {
-		router := v1.Group("/users", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
+		router := v1.Group("/users")
 		user(router, cfg)
 	})
 }
