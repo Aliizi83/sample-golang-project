@@ -10,6 +10,10 @@ import (
 	"regexp"
 	"strings"
 	"text/template"
+	"unicode"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 type CodeType string
@@ -32,21 +36,17 @@ type generatorData struct {
 
 func main() {
 	entityFlag := flag.String("entity", "", "Entity name")
-	camelEntityFlag := flag.String("camel-entity", "", "Camel cased entity name")
-	snakeCaseEntityFlag := flag.String("snake-entity", "", "Snake cased entity name")
-	pluralFlag := flag.String("plural", "", "Plural name")
-	camelPluralFlag := flag.String("camel-plural", "", "Camel cased plural name")
-
 	flag.Parse()
 
 	reader := bufio.NewReader(os.Stdin)
+	entityName := resolveField(reader, "EntityName", *entityFlag, "UserProfile")
 
 	data := generatorData{
-		Entity:            resolveField(reader, "EntityName", *entityFlag, "UserProfile"),
-		CamelEntity:       resolveField(reader, "camelCasedEntityName", *camelEntityFlag, "userProfile"),
-		SnakeEntity:       resolveField(reader, "snake_cased_entity_name", *snakeCaseEntityFlag, "user_profile"),
-		EntityPlural:      resolveField(reader, "PluralName", *pluralFlag, "UserProfiles"),
-		CamelEntityPlural: resolveField(reader, "camelCasedPluralName", *camelPluralFlag, "userProfiles"),
+		Entity:            entityName,
+		CamelEntity:       toCamelCase(entityName),
+		SnakeEntity:       toSnakeCase(entityName),
+		EntityPlural:      toPlural(entityName),
+		CamelEntityPlural: toCamelCase(toPlural(entityName)),
 	}
 
 	// Domain Layer
@@ -116,6 +116,89 @@ func validateInput(input string) error {
 	}
 
 	return nil
+}
+
+func toCamelCase(input string) string {
+	words := splitWords(input)
+	if len(words) == 0 {
+		return ""
+	}
+
+	parts := make([]string, 0, len(words))
+	for i, word := range words {
+		lowerWord := strings.ToLower(word)
+		if i == 0 {
+			parts = append(parts, lowerWord)
+			continue
+		}
+		parts = append(parts, cases.Title(language.Und).String(lowerWord))
+	}
+
+	return strings.Join(parts, "")
+}
+
+func toSnakeCase(input string) string {
+	words := splitWords(input)
+	if len(words) == 0 {
+		return ""
+	}
+
+	parts := make([]string, 0, len(words))
+	for _, word := range words {
+		parts = append(parts, strings.ToLower(word))
+	}
+
+	return strings.Join(parts, "_")
+}
+
+func toPlural(input string) string {
+	trimmed := strings.TrimSpace(input)
+	if trimmed == "" {
+		return ""
+	}
+
+	if strings.HasSuffix(trimmed, "s") || strings.HasSuffix(trimmed, "x") || strings.HasSuffix(trimmed, "z") || strings.HasSuffix(trimmed, "ch") || strings.HasSuffix(trimmed, "sh") {
+		return trimmed + "es"
+	}
+
+	if strings.HasSuffix(trimmed, "y") && len(trimmed) > 1 {
+		last := rune(trimmed[len(trimmed)-2])
+		if unicode.IsLetter(last) && !isVowel(last) {
+			return trimmed[:len(trimmed)-1] + "ies"
+		}
+	}
+
+	if strings.HasSuffix(trimmed, "fe") {
+		return trimmed[:len(trimmed)-2] + "ves"
+	}
+
+	if strings.HasSuffix(trimmed, "f") {
+		return trimmed[:len(trimmed)-1] + "ves"
+	}
+
+	return trimmed + "s"
+}
+
+func splitWords(input string) []string {
+	cleaned := strings.ReplaceAll(strings.ReplaceAll(input, "_", " "), "-", " ")
+	parts := regexp.MustCompile(`[A-Z]+(?=[A-Z][a-z]|[0-9]|$)|[A-Z]?[a-z]+|[A-Z]+|[0-9]+`).FindAllString(cleaned, -1)
+	result := make([]string, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed != "" {
+			result = append(result, trimmed)
+		}
+	}
+	return result
+}
+
+func isVowel(r rune) bool {
+	switch unicode.ToLower(r) {
+	case 'a', 'e', 'i', 'o', 'u':
+		return true
+	default:
+		return false
+	}
 }
 
 func buildGoFilesFromTemplate(templatePath, dstFolder, fileName string, codeType CodeType, data generatorData) error {
