@@ -2,12 +2,13 @@ package handlers
 
 import (
 	"github.com/Aliizi83/sample-golang-project/src/api/dto"
-	_ "github.com/Aliizi83/sample-golang-project/src/api/helpers"
 	"github.com/Aliizi83/sample-golang-project/src/config"
-	_ "github.com/Aliizi83/sample-golang-project/src/domain/filters"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
 	"github.com/Aliizi83/sample-golang-project/src/services"
 	"github.com/gin-gonic/gin"
+
+	_ "github.com/Aliizi83/sample-golang-project/src/api/helpers"
+	_ "github.com/Aliizi83/sample-golang-project/src/domain/filters"
 )
 
 type CityHandler struct {

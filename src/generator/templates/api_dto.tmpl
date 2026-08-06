@@ -1,0 +1,34 @@
+package dto
+
+import "github.com/Aliizi83/sample-golang-project/src/services/dto"
+
+type Create{{.Entity}}Request struct {
+	// Add CreateRequest fields
+}
+
+type Update{{.Entity}}Request struct {
+	// Add update fields
+}
+type {{.Entity}}Response struct {
+	Id      int             `json:"id"`
+    // Add other fields
+}
+
+func To{{.Entity}}Response(from dto.{{.Entity}}) {{.Entity}}Response {
+	return {{.Entity}}Response{
+		Id:      from.Id,
+        // Add extra fields
+	}
+}
+
+func ToCreate{{.Entity}}(from Create{{.Entity}}Request) dto.Create{{.Entity}} {
+	return dto.Create{{.Entity}}{
+		// Add extra fields
+	}
+}
+
+func ToUpdate{{.Entity}}(from Update{{.Entity}}Request) dto.Update{{.Entity}} {
+	return dto.Update{{.Entity}}{
+		// Add extra fields
+	}
+}

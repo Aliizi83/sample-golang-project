@@ -1,0 +1,18 @@
+package services
+
+import (
+	"github.com/Aliizi83/sample-golang-project/src/config"
+	dependencies "github.com/Aliizi83/sample-golang-project/src/dependenies"
+	"github.com/Aliizi83/sample-golang-project/src/domain/models"
+	"github.com/Aliizi83/sample-golang-project/src/services/dto"
+)
+
+func New{{.Entity}}Service(cfg *config.Config) *{{.Entity}}Service {
+	return &{{.Entity}}Service{
+		BaseService: NewBaseService[models.{{.Entity}}, dto.Create{{.Entity}}, dto.Update{{.Entity}}, dto.{{.Entity}}](cfg, dependencies.Get{{.Entity}}Repository(cfg)),
+	}
+}
+
+type {{.Entity}}Service struct {
+	*BaseService[models.{{.Entity}}, dto.Create{{.Entity}}, dto.Update{{.Entity}}, dto.{{.Entity}}]
+}

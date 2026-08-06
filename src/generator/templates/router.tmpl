@@ -1,0 +1,17 @@
+package routers
+
+import (
+	"github.com/Aliizi83/sample-golang-project/src/api/handlers"
+	"github.com/Aliizi83/sample-golang-project/src/config"
+	"github.com/gin-gonic/gin"
+)
+
+func {{.EntityPlural}}(r *gin.RouterGroup, cfg *config.Config) {
+	{{.CamelEntity}}Handler := handlers.New{{.Entity}}Handler(cfg)
+
+	r.POST("/", {{.CamelEntity}}Handler.Create)
+	r.PUT("/:id", {{.CamelEntity}}Handler.Update)
+	r.DELETE("/:id", {{.CamelEntity}}Handler.Delete)
+	r.GET("/:id", {{.CamelEntity}}Handler.GetById)
+	r.POST("/get-by-filters", {{.CamelEntity}}Handler.GetByFilters)
+}

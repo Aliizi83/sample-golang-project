@@ -1,0 +1,102 @@
+package handlers
+
+import (
+	"github.com/Aliizi83/sample-golang-project/src/api/dto"
+	"github.com/Aliizi83/sample-golang-project/src/config"
+	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
+	"github.com/Aliizi83/sample-golang-project/src/services"
+	"github.com/gin-gonic/gin"
+
+	_ "github.com/Aliizi83/sample-golang-project/src/api/helpers"
+	_ "github.com/Aliizi83/sample-golang-project/src/domain/filters"
+)
+
+type {{.Entity}}Handler struct {
+	cfg         *config.Config
+	logger      logging.Logger
+	{{.CamelEntity}}Service *services.{{.Entity}}Service
+}
+
+func New{{.Entity}}Handler(cfg *config.Config) *{{.Entity}}Handler {
+	return &{{.Entity}}Handler{
+		cfg:         cfg,
+		logger:      logging.NewLogger(cfg),
+		{{.CamelEntity}}Service: services.New{{.Entity}}Service(cfg),
+	}
+}
+
+// Create{{.Entity}} godoc
+// @Summary Create a {{.CamelEntity}}
+// @Description Create a {{.CamelEntity}}
+// @Tags {{.EntityPlural}}
+// @Accept json
+// @produces json
+// @Param Request body dto.Create{{.Entity}}Request true "Create a {{.CamelEntity}}"
+// @Success 201 {object} helpers.BaseHttpResponse{result=dto.{{.Entity}}Response} "{{.Entity}} response"
+// @Failure 400 {object} helpers.BaseHttpResponse "Bad request"
+// @Router /v1/{{.CamelEntityPlural}}/ [post]
+// @Security AuthBearer
+func (h *{{.Entity}}Handler) Create(c *gin.Context) {
+	Create(c, dto.ToCreate{{.Entity}}, dto.To{{.Entity}}Response, h.{{.CamelEntity}}Service.Create)
+}
+
+// Update{{.Entity}} godoc
+// @Summary Update a {{.CamelEntity}}
+// @Description Update a {{.CamelEntity}}
+// @Tags {{.EntityPlural}}
+// @Accept json
+// @produces json
+// @Param id path int true "Id"
+// @Param Request body dto.Update{{.Entity}}Request true "Update a {{.CamelEntity}}"
+// @Success 201 {object} helpers.BaseHttpResponse{result=dto.{{.Entity}}Response} "{{.Entity}} response"
+// @Failure 400 {object} helpers.BaseHttpResponse "Bad request"
+// @Router /v1/{{.CamelEntityPlural}}/{id} [put]
+// @Security AuthBearer
+func (h *{{.Entity}}Handler) Update(c *gin.Context) {
+	Update(c, dto.ToUpdate{{.Entity}}, dto.To{{.Entity}}Response, h.{{.CamelEntity}}Service.Update)
+}
+
+// Delete{{.Entity}} godoc
+// @Summary Delete a {{.CamelEntity}}
+// @Description Delete a {{.CamelEntity}}
+// @Tags {{.EntityPlural}}
+// @Accept json
+// @produces json
+// @Param id path int true "Id"
+// @Success 200 {object} helpers.BaseHttpResponse "response"
+// @Failure 400 {object} helpers.BaseHttpResponse "Bad request"
+// @Router /v1/{{.CamelEntityPlural}}/{id} [delete]
+// @Security AuthBearer
+func (h *{{.Entity}}Handler) Delete(c *gin.Context) {
+	Delete(c, h.{{.CamelEntity}}Service.Delete)
+}
+
+// Get{{.Entity}} godoc
+// @Summary Get a {{.CamelEntity}}
+// @Description Get a {{.CamelEntity}}
+// @Tags {{.EntityPlural}}
+// @Accept json
+// @produces json
+// @Param id path int true "Id"
+// @Success 200 {object} helpers.BaseHttpResponse{result=dto.{{.Entity}}Response} "{{.CamelEntity}} response"
+// @Failure 400 {object} helpers.BaseHttpResponse "Bad request"
+// @Router /v1/{{.CamelEntityPlural}}/{id} [get]
+// @Security AuthBearer
+func (h *{{.Entity}}Handler) GetById(c *gin.Context) {
+	GetById(c, dto.To{{.Entity}}Response, h.{{.CamelEntity}}Service.GetById)
+}
+
+// Get{{.EntityPlural}} godoc
+// @Summary Get {{.EntityPlural}}
+// @Description Get {{.EntityPlural}}
+// @Tags {{.EntityPlural}}
+// @Accept json
+// @produces json
+// @Param Request body filters.PaginationInputWithFilter true "Request"
+// @Success 200 {object} helpers.BaseHttpResponse{result=filters.PagedList[dto.{{.Entity}}Response]} "{{.Entity}} response"
+// @Failure 400 {object} helpers.BaseHttpResponse "Bad request"
+// @Router /v1/{{.CamelEntityPlural}}/get-by-filters [post]
+// @Security AuthBearer
+func (h *{{.Entity}}Handler) GetByFilters(c *gin.Context) {
+	GetByFilter(c, dto.To{{.Entity}}Response, h.{{.CamelEntity}}Service.GetByFilter)
+}

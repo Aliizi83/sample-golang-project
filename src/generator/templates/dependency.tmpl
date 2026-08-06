@@ -1,0 +1,6 @@
+
+//Generated dependency function
+
+func Get{{.Entity}}Repository(cfg *config.Config) repositories.{{.Entity}}Repository {
+	return postgres_repositories.NewBaseRepository[models.{{.Entity}}](cfg, []db.PreloadEntity{})
+}
