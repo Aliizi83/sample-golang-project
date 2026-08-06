@@ -12,10 +12,14 @@ func GetUserRepository(cfg *config.Config) repositories.UserRepository {
 	return postgres_repositories.NewPostgresUserRepository(cfg)
 }
 
-func GetCountryRepository(cfg *config.Config) repositories.BaseRepository[models.Country] {
+func GetCountryRepository(cfg *config.Config) repositories.CountryRepository {
 	return postgres_repositories.NewBaseRepository[models.Country](cfg, []db.PreloadEntity{{Entity: "Cities"}, {Entity: "Companies"}})
 }
 
-func GetCityRepository(cfg *config.Config) repositories.BaseRepository[models.City] {
+func GetCityRepository(cfg *config.Config) repositories.CityRepository {
 	return postgres_repositories.NewBaseRepository[models.City](cfg, []db.PreloadEntity{{Entity: "Country"}})
+}
+
+func GetFileRepository(cfg *config.Config) repositories.FileRepository {
+	return postgres_repositories.NewBaseRepository[models.File](cfg, nil)
 }

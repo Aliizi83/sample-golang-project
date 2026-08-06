@@ -1,6 +1,9 @@
 package dto
 
-import "time"
+import (
+	"mime/multipart"
+	"time"
+)
 
 type IdName struct {
 	Id   int
@@ -32,6 +35,7 @@ type City struct {
 
 type CreateFile struct {
 	Name        string
+	File        *multipart.FileHeader
 	Directory   string
 	Description string
 	MimeType    string
