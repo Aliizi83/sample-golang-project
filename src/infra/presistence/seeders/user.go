@@ -21,40 +21,46 @@ var defaultUsers = []*userSeed{
 }
 
 func AddDefaultUsers(database *gorm.DB) error {
-	for _, user := range defaultUsers {
-		var currentUser models.User
-		var defaultRole models.Role
+	count := 0
 
-		bytePass, err := bcrypt.GenerateFromPassword([]byte(user.userModel.Password), bcrypt.DefaultCost)
-		if err != nil {
-			return err
-		}
+	database.Model(&models.User{}).Select("COUNT(*)").Find(&count)
 
-		user.userModel.Password = string(bytePass)
+	if count == 0 {
+		for _, user := range defaultUsers {
+			var currentUser models.User
+			var defaultRole models.Role
 
-		err = database.Where(models.User{Username: user.userModel.Username}).
-			FirstOrCreate(&currentUser, user.userModel).Error
-		if err != nil {
-			return err
-		}
-
-		err = database.Where("title = ?", user.defaultRoles).First(&defaultRole).Error
-		if err != nil {
-			return err
-		}
-
-		var userRole models.UserRole
-		err = database.Where("user_id = ? AND role_id = ?", currentUser.Id, defaultRole.Id).First(&userRole).Error
-		if err == gorm.ErrRecordNotFound {
-			userRole = models.UserRole{
-				UserId: currentUser.Id,
-				RoleId: defaultRole.Id,
-			}
-			if err := database.Create(&userRole).Error; err != nil {
+			bytePass, err := bcrypt.GenerateFromPassword([]byte(user.userModel.Password), bcrypt.DefaultCost)
+			if err != nil {
 				return err
 			}
-		} else if err != nil {
-			return err
+
+			user.userModel.Password = string(bytePass)
+
+			err = database.Where(models.User{Username: user.userModel.Username}).
+				FirstOrCreate(&currentUser, user.userModel).Error
+			if err != nil {
+				return err
+			}
+
+			err = database.Where("title = ?", user.defaultRoles).First(&defaultRole).Error
+			if err != nil {
+				return err
+			}
+
+			var userRole models.UserRole
+			err = database.Where("user_id = ? AND role_id = ?", currentUser.Id, defaultRole.Id).First(&userRole).Error
+			if err == gorm.ErrRecordNotFound {
+				userRole = models.UserRole{
+					UserId: currentUser.Id,
+					RoleId: defaultRole.Id,
+				}
+				if err := database.Create(&userRole).Error; err != nil {
+					return err
+				}
+			} else if err != nil {
+				return err
+			}
 		}
 	}
 

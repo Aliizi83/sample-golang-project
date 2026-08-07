@@ -40,7 +40,12 @@ func AddDefaultData(database *gorm.DB) error {
 		return err
 	}
 
-	seeders.CreateCountries(database)
+	if err := seeders.CreateCountries(database); err != nil {
+		return err
+	}
+	if err := seeders.SeedProperties(database); err != nil {
+		return err
+	}
 
 	return nil
 }

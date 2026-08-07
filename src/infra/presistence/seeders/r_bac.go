@@ -12,21 +12,23 @@ var defaultRoles = []*models.Role{
 }
 
 func AddDefaultRoles(database *gorm.DB) error {
-	for _, role := range defaultRoles {
-		var existingRole models.Role
-		err := database.Where("title = ?", role.Title).First(&existingRole).Error
+	count := 0
+	database.Model(&models.Role{}).Select("COUNT(*)").Find(&count)
 
-		if err == gorm.ErrRecordNotFound {
-			if err := database.Create(role).Error; err != nil {
+	if count == 0 {
+		for _, role := range defaultRoles {
+			var existingRole models.Role
+			err := database.Where("title = ?", role.Title).First(&existingRole).Error
+
+			if err == gorm.ErrRecordNotFound {
+				if err := database.Create(role).Error; err != nil {
+					return err
+				}
+			} else if err != nil {
 				return err
 			}
-		} else if err != nil {
-			return err
 		}
 	}
 
-	
 	return nil
 }
-
-// TODO: Add default permissions after implementing some endpoints
