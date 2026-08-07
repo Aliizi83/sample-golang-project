@@ -23,3 +23,11 @@ func GetCityRepository(cfg *config.Config) repositories.CityRepository {
 func GetFileRepository(cfg *config.Config) repositories.FileRepository {
 	return postgres_repositories.NewBaseRepository[models.File](cfg, nil)
 }
+
+func GetPropertyRepository(cfg *config.Config) repositories.PropertyRepository {
+	return postgres_repositories.NewBaseRepository[models.Property](cfg, []db.PreloadEntity{{Entity: "Category"}})
+}
+
+func GetPropertyCategoryRepository(cfg *config.Config) repositories.PropertyCategoryRepository {
+	return postgres_repositories.NewBaseRepository[models.PropertyCategory](cfg, []db.PreloadEntity{{Entity: "Properties"}})
+}

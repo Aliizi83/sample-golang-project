@@ -26,3 +26,11 @@ type CityRepository interface {
 type FileRepository interface {
 	BaseRepository[models.File]
 }
+
+type PropertyRepository interface {
+	BaseRepository[models.Property]
+}
+
+type PropertyCategoryRepository interface {
+	BaseRepository[models.PropertyCategory]
+}
