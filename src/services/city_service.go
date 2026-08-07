@@ -2,7 +2,7 @@ package services
 
 import (
 	"github.com/Aliizi83/sample-golang-project/src/config"
-	dependencies "github.com/Aliizi83/sample-golang-project/src/dependenies"
+	"github.com/Aliizi83/sample-golang-project/src/dependencies"
 	"github.com/Aliizi83/sample-golang-project/src/domain/models"
 	"github.com/Aliizi83/sample-golang-project/src/services/dto"
 )

@@ -59,7 +59,7 @@ func main() {
 	}
 
 	// Dependency Injection
-	if err := appendCodeToGoFileFromTemplate("./templates/dependency.tmpl", "../dependencies/dependency.go", data); err != nil {
+	if err := appendCodeToGoFileFromTemplate("./templates/dependency.tmpl", "../dependenies/dependency.go", data); err != nil {
 		fmt.Println(err)
 	}
 
