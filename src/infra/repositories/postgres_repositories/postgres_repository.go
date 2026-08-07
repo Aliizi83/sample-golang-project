@@ -84,7 +84,8 @@ func (r *BaseRepository[TModel]) Delete(ctx context.Context, id int) error {
 }
 func (r *BaseRepository[TModel]) GetById(ctx context.Context, id int) (TModel, error) {
 	var model TModel
-	if err := r.database.Where(softDeleteExp, id).Where("id = ?", id).First(&model).Error; err != nil {
+	database := db.Preload(r.database, r.preloads)
+	if err := database.Where(softDeleteExp, id).Where("id = ?", id).First(&model).Error; err != nil {
 		modelName := common.GetTypeName[TModel]()
 		r.logger.Error(err, logging.Postgres, logging.Insert, fmt.Sprintf("error while selecting %s : %s ", modelName, err.Error()), nil)
 		return model, err
