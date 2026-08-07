@@ -52,20 +52,6 @@ type File struct {
 	MimeType    string
 }
 
-type CreateCompany struct {
-	Name      string
-	CountryId int
-}
-
-type UpdateCompany struct {
-	Name      string
-	CountryId int
-}
-type Company struct {
-	IdName
-	Country Country
-}
-
 type CreateColor struct {
 	Name    string
 	HexCode string

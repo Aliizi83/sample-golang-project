@@ -40,4 +40,7 @@ type GearboxRepository interface {
 }//Auto generated repository
 type CarTypeRepository interface {
 	BaseRepository[models.CarType]
+}//Auto generated repository
+type CompanyRepository interface {
+	BaseRepository[models.Company]
 }

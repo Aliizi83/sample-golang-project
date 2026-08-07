@@ -518,6 +518,263 @@
                 }
             }
         },
+        "/v1/companies/": {
+            "post": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Create a company",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Companies"
+                ],
+                "summary": "Create a company",
+                "parameters": [
+                    {
+                        "description": "Create a company",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCompanyRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Company response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CompanyResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/companies/get-by-filters": {
+            "post": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Get Companies",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Companies"
+                ],
+                "summary": "Get Companies",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PaginationInputWithFilter"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Company response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CompanyResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/companies/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Get a company",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Companies"
+                ],
+                "summary": "Get a company",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "company response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CompanyResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Update a company",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Companies"
+                ],
+                "summary": "Update a company",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update a company",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCompanyRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Company response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CompanyResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Delete a company",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Companies"
+                ],
+                "summary": "Delete a company",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "response",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/countries/": {
             "post": {
                 "security": [
@@ -2118,6 +2375,23 @@
                 }
             }
         },
+        "github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCompanyRequest": {
+            "type": "object",
+            "required": [
+                "country",
+                "name"
+            ],
+            "properties": {
+                "country": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 15,
+                    "minLength": 3
+                }
+            }
+        },
         "github_com_Aliizi83_sample-golang-project_src_api_dto.CreateGearboxRequest": {
             "type": "object",
             "required": [
@@ -2374,6 +2648,23 @@
                 }
             }
         },
+        "github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCompanyRequest": {
+            "type": "object",
+            "required": [
+                "country",
+                "name"
+            ],
+            "properties": {
+                "country": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 15,
+                    "minLength": 3
+                }
+            }
+        },
         "github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateFileRequest": {
             "type": "object",
             "properties": {
@@ -2528,6 +2819,35 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CityResponse"
+                    }
+                },
+                "pageNumber": {
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "type": "integer"
+                },
+                "totalPages": {
+                    "type": "integer"
+                },
+                "totalRows": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CompanyResponse": {
+            "type": "object",
+            "properties": {
+                "hasNextPage": {
+                    "type": "boolean"
+                },
+                "hasPreviousPage": {
+                    "type": "boolean"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CompanyResponse"
                     }
                 },
                 "pageNumber": {
