@@ -33,6 +33,8 @@ type generatorData struct {
 	SnakeEntity       string
 	EntityPlural      string
 	CamelEntityPlural string
+	DashEntity        string
+	DashEntityPlural  string
 }
 
 func main() {
@@ -58,6 +60,8 @@ func main() {
 		SnakeEntity:       toSnakeCase(entityName),
 		EntityPlural:      toPlural(entityName),
 		CamelEntityPlural: toCamelCase(toPlural(entityName)),
+		DashEntity:        toDashCase(entityName),
+		DashEntityPlural:  toDashPlural(entityName),
 	}
 
 	// Domain Layer
@@ -340,4 +344,23 @@ func appendCodeToGoFileFromTemplate(templatePath, dstFile string, data generator
 	}
 
 	return nil
+}
+
+func toDashCase(entityName string) string {
+	words := splitWords(entityName)
+	if len(words) == 0 {
+		return ""
+	}
+
+	parts := make([]string, 0, len(words))
+	for _, word := range words {
+		parts = append(parts, strings.ToLower(word))
+	}
+
+	return strings.Join(parts, "-")
+}
+
+func toDashPlural(entityName string) string {
+	pluralEntity := toPlural(entityName)
+	return toDashCase(pluralEntity)
 }

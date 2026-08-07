@@ -37,7 +37,7 @@ func New{{.Entity}}Handler(cfg *config.Config) *{{.Entity}}Handler {
 // @Param Request body dto.Create{{.Entity}}Request true "Create a {{.CamelEntity}}"
 // @Success 201 {object} helpers.BaseHttpResponse{result=dto.{{.Entity}}Response} "{{.Entity}} response"
 // @Failure 400 {object} helpers.BaseHttpResponse "Bad request"
-// @Router /v1/{{.CamelEntityPlural}}/ [post]
+// @Router /v1/{{.DashEntityPlural}}/ [post]
 // @Security AuthBearer
 func (h *{{.Entity}}Handler) Create(c *gin.Context) {
 	Create(c, dto.ToCreate{{.Entity}}, dto.To{{.Entity}}Response, h.{{.CamelEntity}}Service.Create)
@@ -53,7 +53,7 @@ func (h *{{.Entity}}Handler) Create(c *gin.Context) {
 // @Param Request body dto.Update{{.Entity}}Request true "Update a {{.CamelEntity}}"
 // @Success 201 {object} helpers.BaseHttpResponse{result=dto.{{.Entity}}Response} "{{.Entity}} response"
 // @Failure 400 {object} helpers.BaseHttpResponse "Bad request"
-// @Router /v1/{{.CamelEntityPlural}}/{id} [put]
+// @Router /v1/{{.DashEntityPlural}}/{id} [put]
 // @Security AuthBearer
 func (h *{{.Entity}}Handler) Update(c *gin.Context) {
 	Update(c, dto.ToUpdate{{.Entity}}, dto.To{{.Entity}}Response, h.{{.CamelEntity}}Service.Update)
@@ -68,7 +68,7 @@ func (h *{{.Entity}}Handler) Update(c *gin.Context) {
 // @Param id path int true "Id"
 // @Success 200 {object} helpers.BaseHttpResponse "response"
 // @Failure 400 {object} helpers.BaseHttpResponse "Bad request"
-// @Router /v1/{{.CamelEntityPlural}}/{id} [delete]
+// @Router /v1/{{.DashEntityPlural}}/{id} [delete]
 // @Security AuthBearer
 func (h *{{.Entity}}Handler) Delete(c *gin.Context) {
 	Delete(c, h.{{.CamelEntity}}Service.Delete)
@@ -83,7 +83,7 @@ func (h *{{.Entity}}Handler) Delete(c *gin.Context) {
 // @Param id path int true "Id"
 // @Success 200 {object} helpers.BaseHttpResponse{result=dto.{{.Entity}}Response} "{{.CamelEntity}} response"
 // @Failure 400 {object} helpers.BaseHttpResponse "Bad request"
-// @Router /v1/{{.CamelEntityPlural}}/{id} [get]
+// @Router /v1/{{.DashEntityPlural}}/{id} [get]
 // @Security AuthBearer
 func (h *{{.Entity}}Handler) GetById(c *gin.Context) {
 	GetById(c, dto.To{{.Entity}}Response, h.{{.CamelEntity}}Service.GetById)
@@ -98,7 +98,7 @@ func (h *{{.Entity}}Handler) GetById(c *gin.Context) {
 // @Param Request body filters.PaginationInputWithFilter true "Request"
 // @Success 200 {object} helpers.BaseHttpResponse{result=filters.PagedList[dto.{{.Entity}}Response]} "{{.Entity}} response"
 // @Failure 400 {object} helpers.BaseHttpResponse "Bad request"
-// @Router /v1/{{.CamelEntityPlural}}/get-by-filters [post]
+// @Router /v1/{{.DashEntityPlural}}/get-by-filters [post]
 // @Security AuthBearer
 func (h *{{.Entity}}Handler) GetByFilters(c *gin.Context) {
 	GetByFilter(c, dto.To{{.Entity}}Response, h.{{.CamelEntity}}Service.GetByFilter)
