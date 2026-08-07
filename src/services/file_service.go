@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/Aliizi83/sample-golang-project/src/config"
-	"github.com/Aliizi83/sample-golang-project/src/dependencies"
 	"github.com/Aliizi83/sample-golang-project/src/domain/models"
+	"github.com/Aliizi83/sample-golang-project/src/domain/repositories"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
 	"github.com/Aliizi83/sample-golang-project/src/services/dto"
 	"github.com/google/uuid"
@@ -20,9 +20,9 @@ type FileService struct {
 	*BaseService[models.File, dto.CreateFile, dto.UpdateFile, dto.File]
 }
 
-func NewFileService(cfg *config.Config) *FileService {
+func NewFileService(cfg *config.Config, fileRepository repositories.FileRepository) *FileService {
 	return &FileService{
-		BaseService: NewBaseService[models.File, dto.CreateFile, dto.UpdateFile, dto.File](cfg, dependencies.GetFileRepository(cfg)),
+		BaseService: NewBaseService[models.File, dto.CreateFile, dto.UpdateFile, dto.File](cfg, fileRepository),
 	}
 }
 

@@ -5,7 +5,6 @@ import (
 
 	"github.com/Aliizi83/sample-golang-project/src/common"
 	"github.com/Aliizi83/sample-golang-project/src/config"
-	"github.com/Aliizi83/sample-golang-project/src/dependencies"
 	"github.com/Aliizi83/sample-golang-project/src/domain/models"
 	"github.com/Aliizi83/sample-golang-project/src/domain/repositories"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
@@ -22,16 +21,15 @@ type UserService struct {
 	tokenService *TokenService
 }
 
-func NewUserService(cfg *config.Config) *UserService {
+func NewUserService(cfg *config.Config, userRepository repositories.UserRepository) *UserService {
 	logger := logging.NewLogger(cfg)
-	repository := dependencies.GetUserRepository(cfg)
 	otpService := NewOtpService(cfg)
 	tokenService := NewTokenService(cfg)
 
 	return &UserService{
 		cfg:          cfg,
 		logger:       logger,
-		repository:   repository,
+		repository:   userRepository,
 		otpService:   otpService,
 		tokenService: tokenService,
 	}

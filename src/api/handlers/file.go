@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/Aliizi83/sample-golang-project/src/api/dto"
 	"github.com/Aliizi83/sample-golang-project/src/config"
+	"github.com/Aliizi83/sample-golang-project/src/dependencies"
 	"github.com/Aliizi83/sample-golang-project/src/services"
 	"github.com/gin-gonic/gin"
 
@@ -16,8 +17,9 @@ type FileHandler struct {
 }
 
 func NewFileHandler(cfg *config.Config) *FileHandler {
+	fileRepository := dependencies.GetFileRepository(cfg)
 	return &FileHandler{
-		fileService: services.NewFileService(cfg),
+		fileService: services.NewFileService(cfg, fileRepository),
 		cfg:         cfg,
 	}
 }

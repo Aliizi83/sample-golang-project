@@ -4,7 +4,7 @@ import (
 	"github.com/Aliizi83/sample-golang-project/src/api/dto"
 	_ "github.com/Aliizi83/sample-golang-project/src/api/helpers"
 	"github.com/Aliizi83/sample-golang-project/src/config"
-	dependencies "github.com/Aliizi83/sample-golang-project/src/dependenies"
+	"github.com/Aliizi83/sample-golang-project/src/dependencies"
 	_ "github.com/Aliizi83/sample-golang-project/src/domain/filters"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
 	"github.com/Aliizi83/sample-golang-project/src/services"

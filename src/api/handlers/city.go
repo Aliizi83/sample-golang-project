@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/Aliizi83/sample-golang-project/src/api/dto"
 	"github.com/Aliizi83/sample-golang-project/src/config"
+	"github.com/Aliizi83/sample-golang-project/src/dependencies"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
 	"github.com/Aliizi83/sample-golang-project/src/services"
 	"github.com/gin-gonic/gin"
@@ -18,10 +19,11 @@ type CityHandler struct {
 }
 
 func NewCityHandler(cfg *config.Config) *CityHandler {
+	repository := dependencies.GetCityRepository(cfg)
 	return &CityHandler{
 		cfg:         cfg,
 		logger:      logging.NewLogger(cfg),
-		cityService: services.NewCityService(cfg),
+		cityService: services.NewCityService(cfg, repository),
 	}
 }
 

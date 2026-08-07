@@ -6,6 +6,7 @@ import (
 	"github.com/Aliizi83/sample-golang-project/src/api/dto"
 	"github.com/Aliizi83/sample-golang-project/src/api/helpers"
 	"github.com/Aliizi83/sample-golang-project/src/config"
+	"github.com/Aliizi83/sample-golang-project/src/dependencies"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
 	"github.com/Aliizi83/sample-golang-project/src/services"
 	"github.com/gin-gonic/gin"
@@ -20,12 +21,13 @@ type UserHandler struct {
 
 func NewUserHandler(cfg *config.Config) *UserHandler {
 	logger := logging.NewLogger(cfg)
+	userRepository := dependencies.GetUserRepository(cfg)
 
 	return &UserHandler{
 		cfg:         cfg,
 		logger:      logger,
 		otpService:  *services.NewOtpService(cfg),
-		userService: *services.NewUserService(cfg),
+		userService: *services.NewUserService(cfg, userRepository),
 	}
 }
 
