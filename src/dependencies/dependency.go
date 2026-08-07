@@ -35,3 +35,8 @@ func GetPropertyCategoryRepository(cfg *config.Config) repositories.PropertyCate
 func GetGearboxRepository(cfg *config.Config) repositories.GearboxRepository {
 	return postgres_repositories.NewBaseRepository[models.Gearbox](cfg, []db.PreloadEntity{})
 }
+//Generated dependency function
+
+func GetCarTypeRepository(cfg *config.Config) repositories.CarTypeRepository {
+	return postgres_repositories.NewBaseRepository[models.CarType](cfg, []db.PreloadEntity{})
+}

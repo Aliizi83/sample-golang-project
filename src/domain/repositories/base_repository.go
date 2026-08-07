@@ -37,4 +37,7 @@ type PropertyCategoryRepository interface {
 //Auto generated repository
 type GearboxRepository interface {
 	BaseRepository[models.Gearbox]
+}//Auto generated repository
+type CarTypeRepository interface {
+	BaseRepository[models.CarType]
 }
