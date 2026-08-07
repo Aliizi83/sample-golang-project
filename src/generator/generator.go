@@ -37,6 +37,16 @@ type generatorData struct {
 
 func main() {
 	entityFlag := flag.String("entity", "", "Entity name")
+
+	ignoreModel := flag.Bool("ignore-model", false, "Skip model generation")
+	ignoreRepo := flag.Bool("ignore-repo", false, "Skip repository generation")
+	ignoreDependency := flag.Bool("ignore-dependency", false, "Skip dependency injection generation")
+	ignoreServiceDto := flag.Bool("ignore-service-dto", false, "Skip service DTO generation")
+	ignoreService := flag.Bool("ignore-service", false, "Skip service generation")
+	ignoreApiDto := flag.Bool("ignore-api-dto", false, "Skip API DTO generation")
+	ignoreHandler := flag.Bool("ignore-handler", false, "Skip handler generation")
+	ignoreRouter := flag.Bool("ignore-router", false, "Skip router generation")
+
 	flag.Parse()
 
 	reader := bufio.NewReader(os.Stdin)
@@ -51,36 +61,57 @@ func main() {
 	}
 
 	// Domain Layer
-	if err := buildGoFilesFromTemplate("./templates/model.tmpl", "../domain/models", data.SnakeEntity, model, data); err != nil {
-		fmt.Println(err)
+	if !*ignoreModel {
+		if err := buildGoFilesFromTemplate("./templates/model.tmpl", "../domain/models", data.SnakeEntity, model, data); err != nil {
+			fmt.Println(err)
+		}
 	}
-	if err := appendCodeToGoFileFromTemplate("./templates/repository.tmpl", "../domain/repositories/base_repository.go", data); err != nil {
-		fmt.Println(err)
+
+	if !*ignoreRepo {
+		if err := appendCodeToGoFileFromTemplate("./templates/repository.tmpl", "../domain/repositories/base_repository.go", data); err != nil {
+			fmt.Println(err)
+		}
 	}
 
 	// Dependency Injection
-	if err := appendCodeToGoFileFromTemplate("./templates/dependency.tmpl", "../dependencies/dependency.go", data); err != nil {
-		fmt.Println(err)
+	if !*ignoreDependency {
+		if err := appendCodeToGoFileFromTemplate("./templates/dependency.tmpl", "../dependencies/dependency.go", data); err != nil {
+			fmt.Println(err)
+		}
 	}
 
 	// Service Layer
-	if err := buildGoFilesFromTemplate("./templates/service_dto.tmpl", "../services/dto", data.SnakeEntity, dto, data); err != nil {
-		fmt.Println(err)
+	if !*ignoreServiceDto {
+		if err := buildGoFilesFromTemplate("./templates/service_dto.tmpl", "../services/dto", data.SnakeEntity, dto, data); err != nil {
+			fmt.Println(err)
+		}
 	}
-	if err := buildGoFilesFromTemplate("./templates/service.tmpl", "../services", data.SnakeEntity, service, data); err != nil {
-		fmt.Println(err)
+
+	if !*ignoreService {
+		if err := buildGoFilesFromTemplate("./templates/service.tmpl", "../services", data.SnakeEntity, service, data); err != nil {
+			fmt.Println(err)
+		}
 	}
 
 	// Api Layer
-	if err := buildGoFilesFromTemplate("./templates/api_dto.tmpl", "../api/dto", data.SnakeEntity, dto, data); err != nil {
-		fmt.Println(err)
+	if !*ignoreApiDto {
+		if err := buildGoFilesFromTemplate("./templates/api_dto.tmpl", "../api/dto", data.SnakeEntity, dto, data); err != nil {
+			fmt.Println(err)
+		}
 	}
-	if err := buildGoFilesFromTemplate("./templates/handler.tmpl", "../api/handlers", data.SnakeEntity, handler, data); err != nil {
-		fmt.Println(err)
+
+	if !*ignoreHandler {
+		if err := buildGoFilesFromTemplate("./templates/handler.tmpl", "../api/handlers", data.SnakeEntity, handler, data); err != nil {
+			fmt.Println(err)
+		}
 	}
-	if err := buildGoFilesFromTemplate("./templates/router.tmpl", "../api/routers", data.SnakeEntity, router, data); err != nil {
-		fmt.Println(err)
+
+	if !*ignoreRouter {
+		if err := buildGoFilesFromTemplate("./templates/router.tmpl", "../api/routers", data.SnakeEntity, router, data); err != nil {
+			fmt.Println(err)
+		}
 	}
+
 }
 
 func resolveField(reader *bufio.Reader, fieldName, flagValue, example string) string {
