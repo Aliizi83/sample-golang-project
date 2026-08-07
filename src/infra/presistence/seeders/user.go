@@ -20,7 +20,7 @@ var defaultUsers = []*userSeed{
 		defaultRoles: constant.DefaultCustomerRoleTitle},
 }
 
-func AddDefaultUsers(database *gorm.DB) error {
+func seedUsers(database *gorm.DB) error {
 	count := 0
 
 	database.Model(&models.User{}).Select("COUNT(*)").Find(&count)

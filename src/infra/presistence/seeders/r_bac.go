@@ -11,7 +11,7 @@ var defaultRoles = []*models.Role{
 	{Title: constant.DefaultCustomerRoleTitle, Name: constant.DefaultCustomerRoleTitle},
 }
 
-func AddDefaultRoles(database *gorm.DB) error {
+func seedRoles(database *gorm.DB) error {
 	count := 0
 	database.Model(&models.Role{}).Select("COUNT(*)").Find(&count)
 

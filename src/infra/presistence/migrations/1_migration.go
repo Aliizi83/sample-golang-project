@@ -32,19 +32,10 @@ func createTables(database *gorm.DB) {
 }
 
 func AddDefaultData(database *gorm.DB) error {
-	if err := seeders.AddDefaultRoles(database); err != nil {
-		return err
-	}
-
-	if err := seeders.AddDefaultUsers(database); err != nil {
-		return err
-	}
-
-	if err := seeders.CreateCountries(database); err != nil {
-		return err
-	}
-	if err := seeders.SeedProperties(database); err != nil {
-		return err
+	for _, seederFunction := range seeders.Seeders {
+		if err := seederFunction(database); err != nil {
+			return err
+		}
 	}
 
 	return nil

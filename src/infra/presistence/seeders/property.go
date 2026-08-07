@@ -19,7 +19,7 @@ var defaultPropertyCategories []models.PropertyCategory = []models.PropertyCateg
 	{Name: "Windows and mirrors", Icon: "Windows and mirrors"},
 }
 
-func SeedProperties(database *gorm.DB) error {
+func seedProperties(database *gorm.DB) error {
 	count := 0
 
 	database.
