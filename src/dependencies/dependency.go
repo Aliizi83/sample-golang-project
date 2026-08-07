@@ -31,3 +31,7 @@ func GetPropertyRepository(cfg *config.Config) repositories.PropertyRepository {
 func GetPropertyCategoryRepository(cfg *config.Config) repositories.PropertyCategoryRepository {
 	return postgres_repositories.NewBaseRepository[models.PropertyCategory](cfg, []db.PreloadEntity{{Entity: "Properties"}})
 }
+
+func GetGearboxRepository(cfg *config.Config) repositories.GearboxRepository {
+	return postgres_repositories.NewBaseRepository[models.Gearbox](cfg, []db.PreloadEntity{})
+}

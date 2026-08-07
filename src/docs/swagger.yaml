@@ -44,6 +44,15 @@ definitions:
     - countryId
     - name
     type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.CreateGearboxRequest:
+    properties:
+      name:
+        maxLength: 30
+        minLength: 3
+        type: string
+    required:
+    - name
+    type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.CreatePropertyCategoryRequest:
     properties:
       icon:
@@ -98,6 +107,13 @@ definitions:
         type: integer
       mimeType:
         type: string
+      name:
+        type: string
+    type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.GearboxResponse:
+    properties:
+      id:
+        type: integer
       name:
         type: string
     type: object
@@ -200,6 +216,15 @@ definitions:
     properties:
       description:
         type: string
+    type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateGearboxRequest:
+    properties:
+      name:
+        maxLength: 30
+        minLength: 3
+        type: string
+    required:
+    - name
     type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.UpdatePropertyCategoryRequest:
     properties:
@@ -309,6 +334,25 @@ definitions:
       items:
         items:
           $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.FileResponse'
+        type: array
+      pageNumber:
+        type: integer
+      pageSize:
+        type: integer
+      totalPages:
+        type: integer
+      totalRows:
+        type: integer
+    type: object
+  ? github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_GearboxResponse
+  : properties:
+      hasNextPage:
+        type: boolean
+      hasPreviousPage:
+        type: boolean
+      items:
+        items:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.GearboxResponse'
         type: array
       pageNumber:
         type: integer
@@ -841,6 +885,157 @@ paths:
       summary: Get Files
       tags:
       - Files
+  /v1/gearboxes/:
+    post:
+      consumes:
+      - application/json
+      description: Create a gearbox
+      parameters:
+      - description: Create a gearbox
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CreateGearboxRequest'
+      responses:
+        "201":
+          description: Gearbox response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.GearboxResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Create a gearbox
+      tags:
+      - Gearboxes
+  /v1/gearboxes/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a gearbox
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: response
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Delete a gearbox
+      tags:
+      - Gearboxes
+    get:
+      consumes:
+      - application/json
+      description: Get a gearbox
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: gearbox response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.GearboxResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get a gearbox
+      tags:
+      - Gearboxes
+    put:
+      consumes:
+      - application/json
+      description: Update a gearbox
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update a gearbox
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateGearboxRequest'
+      responses:
+        "201":
+          description: Gearbox response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.GearboxResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Update a gearbox
+      tags:
+      - Gearboxes
+  /v1/gearboxes/get-by-filters:
+    post:
+      consumes:
+      - application/json
+      description: Get Gearboxes
+      parameters:
+      - description: Request
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PaginationInputWithFilter'
+      responses:
+        "200":
+          description: Gearbox response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_GearboxResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get Gearboxes
+      tags:
+      - Gearboxes
   /v1/health:
     get:
       consumes:

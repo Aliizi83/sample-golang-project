@@ -34,3 +34,7 @@ type PropertyRepository interface {
 type PropertyCategoryRepository interface {
 	BaseRepository[models.PropertyCategory]
 }
+//Auto generated repository
+type GearboxRepository interface {
+	BaseRepository[models.Gearbox]
+}
