@@ -52,21 +52,6 @@ type File struct {
 	MimeType    string
 }
 
-type CreateColor struct {
-	Name    string
-	HexCode string
-}
-
-type UpdateColor struct {
-	Name    string
-	HexCode string
-}
-
-type Color struct {
-	IdName
-	HexCode string
-}
-
 type CreatePersianYear struct {
 	PersianTitle string
 	Year         int

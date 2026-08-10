@@ -43,4 +43,7 @@ type CarTypeRepository interface {
 }//Auto generated repository
 type CompanyRepository interface {
 	BaseRepository[models.Company]
+}//Auto generated repository
+type ColorRepository interface {
+	BaseRepository[models.Color]
 }

@@ -9,12 +9,16 @@ type Country struct {
 	Companies []Company
 }
 
+//CRUD done
+
 type City struct {
 	BaseModel
 	Name      string `gorm:"size:10;type:string;not null;"`
 	CountryId int
 	Country   Country `gorm:"foreignKey:CountryId;constraint:OnUpdate:NO ACTION;OnDelete:NO ACTION"`
 }
+
+//CRUD done
 
 type PersianYear struct {
 	BaseModel
@@ -25,12 +29,16 @@ type PersianYear struct {
 	CarModelYears []CarModelYear
 }
 
+//CRUD done
+
 type Color struct {
 	BaseModel
 	Name           string `gorm:"size:15;type:string;not null,unique"`
 	HexCode        string `gorm:"size:7;type:string;not null,unique"`
 	CarModelColors []CarModelColor
 }
+
+//CRUD done
 
 type File struct {
 	BaseModel
@@ -39,6 +47,8 @@ type File struct {
 	Description string `gorm:"size:500;type:string;not null"`
 	MimeType    string `gorm:"size:20;type:string;not null"`
 }
+
+//CRUD done
 
 func init() {
 	RegisterModel(&Country{})

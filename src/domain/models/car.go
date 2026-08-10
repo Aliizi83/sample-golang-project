@@ -7,12 +7,14 @@ type Gearbox struct {
 	Name      string `gorm:"size:15;type:string;not null,unique;"`
 	CarModels []CarModel
 }
+//CRUD done
 
 type CarType struct {
 	BaseModel
 	Name      string `gorm:"size:15;type:string;not null,unique;"`
 	CarModels []CarModel
 }
+//CRUD done
 
 type Company struct {
 	BaseModel
@@ -21,6 +23,7 @@ type Company struct {
 	CountryId int
 	CarModels []CarModel
 }
+//CRUD done
 
 type CarModel struct {
 	BaseModel

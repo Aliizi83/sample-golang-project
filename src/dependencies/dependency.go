@@ -47,3 +47,9 @@ func GetCarTypeRepository(cfg *config.Config) repositories.CarTypeRepository {
 func GetCompanyRepository(cfg *config.Config) repositories.CompanyRepository {
 	return postgres_repositories.NewBaseRepository[models.Company](cfg, []db.PreloadEntity{{Entity: "Country"}})
 }
+
+//Generated dependency function
+
+func GetColorRepository(cfg *config.Config) repositories.ColorRepository {
+	return postgres_repositories.NewBaseRepository[models.Color](cfg, []db.PreloadEntity{})
+}

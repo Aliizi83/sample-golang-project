@@ -15,6 +15,15 @@ definitions:
       name:
         type: string
     type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.ColorResponse:
+    properties:
+      hexCode:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.CompanyResponse:
     properties:
       country:
@@ -58,6 +67,19 @@ definitions:
         type: string
     required:
     - countryId
+    - name
+    type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.CreateColorRequest:
+    properties:
+      hexCode:
+        maxLength: 7
+        minLength: 7
+        type: string
+      name:
+        maxLength: 15
+        minLength: 3
+        type: string
+    required:
     - name
     type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCompanyRequest:
@@ -249,6 +271,19 @@ definitions:
         minLength: 3
         type: string
     type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateColorRequest:
+    properties:
+      hexCode:
+        maxLength: 7
+        minLength: 7
+        type: string
+      name:
+        maxLength: 15
+        minLength: 3
+        type: string
+    required:
+    - name
+    type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCompanyRequest:
     properties:
       country:
@@ -364,6 +399,25 @@ definitions:
       items:
         items:
           $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CityResponse'
+        type: array
+      pageNumber:
+        type: integer
+      pageSize:
+        type: integer
+      totalPages:
+        type: integer
+      totalRows:
+        type: integer
+    type: object
+  ? github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_ColorResponse
+  : properties:
+      hasNextPage:
+        type: boolean
+      hasPreviousPage:
+        type: boolean
+      items:
+        items:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.ColorResponse'
         type: array
       pageNumber:
         type: integer
@@ -815,6 +869,157 @@ paths:
       summary: Get Cities
       tags:
       - Cities
+  /v1/colors/:
+    post:
+      consumes:
+      - application/json
+      description: Create a color
+      parameters:
+      - description: Create a color
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CreateColorRequest'
+      responses:
+        "201":
+          description: Color response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.ColorResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Create a color
+      tags:
+      - Colors
+  /v1/colors/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a color
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: response
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Delete a color
+      tags:
+      - Colors
+    get:
+      consumes:
+      - application/json
+      description: Get a color
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: color response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.ColorResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get a color
+      tags:
+      - Colors
+    put:
+      consumes:
+      - application/json
+      description: Update a color
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update a color
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateColorRequest'
+      responses:
+        "201":
+          description: Color response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.ColorResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Update a color
+      tags:
+      - Colors
+  /v1/colors/get-by-filters:
+    post:
+      consumes:
+      - application/json
+      description: Get Colors
+      parameters:
+      - description: Request
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PaginationInputWithFilter'
+      responses:
+        "200":
+          description: Color response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_ColorResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get Colors
+      tags:
+      - Colors
   /v1/companies/:
     post:
       consumes:
