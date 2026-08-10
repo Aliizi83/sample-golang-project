@@ -10,7 +10,7 @@ type TokenDetail struct {
 	AccessToken            string `json:"accessToken"`
 	RefreshToken           string `json:"refreshToken"`
 	AccessTokenExpireTime  int    `json:"accessTokenExpireTime"`
-	RefreshTokenExpireTime int    `json:"accessTokenExpireTime"`
+	RefreshTokenExpireTime int    `json:"refreshTokenExpireTime"`
 }
 
 type RegisterUserByUsernameRequest struct {
