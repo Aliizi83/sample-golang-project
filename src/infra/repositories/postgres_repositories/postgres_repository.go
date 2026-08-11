@@ -9,6 +9,7 @@ import (
 	"github.com/Aliizi83/sample-golang-project/src/config"
 	"github.com/Aliizi83/sample-golang-project/src/constants"
 	"github.com/Aliizi83/sample-golang-project/src/domain/filters"
+	"github.com/Aliizi83/sample-golang-project/src/domain/models"
 	"github.com/Aliizi83/sample-golang-project/src/infra/presistence/db"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
 	"gorm.io/gorm"
@@ -16,13 +17,13 @@ import (
 
 const softDeleteExp string = "id = ? AND deleted_by IS NULL"
 
-type BaseRepository[TModel any] struct {
+type BaseRepository[TModel models.Identifiable] struct {
 	database *gorm.DB
 	logger   logging.Logger
 	preloads []db.PreloadEntity
 }
 
-func NewBaseRepository[TModel any](cfg *config.Config, preloads []db.PreloadEntity) *BaseRepository[TModel] {
+func NewBaseRepository[TModel models.Identifiable](cfg *config.Config, preloads []db.PreloadEntity) *BaseRepository[TModel] {
 	return &BaseRepository[TModel]{
 		database: db.GetDB(),
 		logger:   logging.NewLogger(cfg),
@@ -38,9 +39,9 @@ func (r *BaseRepository[TModel]) Create(ctx context.Context, model TModel) (TMod
 		tx.Rollback()
 		return model, err
 	}
-
 	tx.Commit()
-	return model, nil
+	id := model.GetID()
+	return r.GetById(ctx, int(id))
 }
 
 func (r *BaseRepository[TModel]) Update(ctx context.Context, id int, updateFields map[string]any) (TModel, error) {
@@ -62,7 +63,7 @@ func (r *BaseRepository[TModel]) Update(ctx context.Context, id int, updateField
 		return model, err
 	}
 	tx.Commit()
-	return model, nil
+	return r.GetById(ctx, int(id))
 }
 func (r *BaseRepository[TModel]) Delete(ctx context.Context, id int) error {
 	var model TModel

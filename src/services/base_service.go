@@ -6,16 +6,17 @@ import (
 	"github.com/Aliizi83/sample-golang-project/src/common"
 	"github.com/Aliizi83/sample-golang-project/src/config"
 	"github.com/Aliizi83/sample-golang-project/src/domain/filters"
+	"github.com/Aliizi83/sample-golang-project/src/domain/models"
 	"github.com/Aliizi83/sample-golang-project/src/domain/repositories"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
 )
 
-type BaseService[TModel, TCreate, TUpdate, TResponse any] struct {
+type BaseService[TModel models.Identifiable, TCreate, TUpdate, TResponse any] struct {
 	logger     logging.Logger
 	repository repositories.BaseRepository[TModel]
 }
 
-func NewBaseService[TModel, TCreate, TUpdate, TResponse any](cfg *config.Config, repository repositories.BaseRepository[TModel]) *BaseService[TModel, TCreate, TUpdate, TResponse] {
+func NewBaseService[TModel models.Identifiable, TCreate, TUpdate, TResponse any](cfg *config.Config, repository repositories.BaseRepository[TModel]) *BaseService[TModel, TCreate, TUpdate, TResponse] {
 	logger := logging.NewLogger(cfg)
 	return &BaseService[TModel, TCreate, TUpdate, TResponse]{
 		repository: repository,

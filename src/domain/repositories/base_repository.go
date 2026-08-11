@@ -7,7 +7,7 @@ import (
 	"github.com/Aliizi83/sample-golang-project/src/domain/models"
 )
 
-type BaseRepository[TModel any] interface {
+type BaseRepository[TModel models.Identifiable] interface {
 	Create(ctx context.Context, model TModel) (TModel, error)
 	Update(ctx context.Context, id int, updateFields map[string]any) (TModel, error)
 	Delete(ctx context.Context, id int) error
@@ -34,19 +34,23 @@ type PropertyRepository interface {
 type PropertyCategoryRepository interface {
 	BaseRepository[models.PropertyCategory]
 }
-//Auto generated repository
+
+// Auto generated repository
 type GearboxRepository interface {
 	BaseRepository[models.Gearbox]
-}//Auto generated repository
+} //Auto generated repository
 type CarTypeRepository interface {
 	BaseRepository[models.CarType]
-}//Auto generated repository
+} //Auto generated repository
 type CompanyRepository interface {
 	BaseRepository[models.Company]
-}//Auto generated repository
+} //Auto generated repository
 type ColorRepository interface {
 	BaseRepository[models.Color]
-}//Auto generated repository
+} //Auto generated repository
 type PersianYearRepository interface {
 	BaseRepository[models.PersianYear]
+} //Auto generated repository
+type CarModelRepository interface {
+	BaseRepository[models.CarModel]
 }

@@ -11,6 +11,10 @@ import (
 
 const UniqueCodeLength = 8
 
+type Identifiable interface {
+	GetID() uint
+}
+
 type BaseModel struct {
 	Id         uint       `gorm:"primaryKey"`
 	Code       string     `gorm:"type:varchar(32);not null;unique"`
@@ -20,6 +24,10 @@ type BaseModel struct {
 	CreatedBy  int        `gorm:"not null"`
 	ModifiedBy *int       `gorm:"default:null"`
 	DeletedBy  *int       `gorm:"default:null"`
+}
+
+func (m BaseModel) GetID() uint {
+	return m.Id
 }
 
 func (m *BaseModel) BeforeCreate(tx *gorm.DB) error {
