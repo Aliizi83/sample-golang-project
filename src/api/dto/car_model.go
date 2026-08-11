@@ -1,6 +1,10 @@
 package dto
 
-import "github.com/Aliizi83/sample-golang-project/src/services/dto"
+import (
+	"sync"
+
+	"github.com/Aliizi83/sample-golang-project/src/services/dto"
+)
 
 type CreateCarModelRequest struct {
 	Name      string `json:"name" binding:"required,min=3,max=15"`
@@ -16,14 +20,28 @@ type UpdateCarModelRequest struct {
 	GearboxId int    `json:"gearboxId,omitempty"`
 }
 type CarModelResponse struct {
-	Id      int             `json:"id"`
-	Name    string          `json:"name"`
-	Company CompanyResponse `json:"company"`
-	CarType CarTypeResponse `json:"carType"`
-	Gearbox GearboxResponse `json:"gearbox"`
+	Id      int                     `json:"id"`
+	Name    string                  `json:"name"`
+	Company CompanyResponse         `json:"company"`
+	CarType CarTypeResponse         `json:"carType"`
+	Gearbox GearboxResponse         `json:"gearbox"`
+	Colors  []CarModelColorResponse `json:"colors"`
 }
 
 func ToCarModelResponse(from dto.CarModel) CarModelResponse {
+	colors := []CarModelColorResponse{}
+
+	var wg sync.WaitGroup
+
+	go func() {
+		for _, v := range from.CarModelColors {
+			colors = append(colors, ToCarModelColorResponse(v))
+		}
+		wg.Done()
+	}()
+
+	wg.Wait()
+
 	return CarModelResponse{
 		Id:      from.Id,
 		Name:    from.Name,

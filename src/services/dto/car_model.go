@@ -15,9 +15,10 @@ type UpdateCarModel struct {
 }
 
 type CarModel struct {
-	Id      int
-	Name    string
-	CarType CarType
-	Company Company
-	Gearbox Gearbox
+	Id             int
+	Name           string
+	CarType        CarType
+	Company        Company
+	Gearbox        Gearbox
+	CarModelColors []CarModelColor
 }
