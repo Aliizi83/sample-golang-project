@@ -46,4 +46,7 @@ type CompanyRepository interface {
 }//Auto generated repository
 type ColorRepository interface {
 	BaseRepository[models.Color]
+}//Auto generated repository
+type PersianYearRepository interface {
+	BaseRepository[models.PersianYear]
 }

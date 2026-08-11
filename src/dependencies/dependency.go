@@ -53,3 +53,8 @@ func GetCompanyRepository(cfg *config.Config) repositories.CompanyRepository {
 func GetColorRepository(cfg *config.Config) repositories.ColorRepository {
 	return postgres_repositories.NewBaseRepository[models.Color](cfg, []db.PreloadEntity{})
 }
+//Generated dependency function
+
+func GetPersianYearRepository(cfg *config.Config) repositories.PersianYearRepository {
+	return postgres_repositories.NewBaseRepository[models.PersianYear](cfg, []db.PreloadEntity{})
+}

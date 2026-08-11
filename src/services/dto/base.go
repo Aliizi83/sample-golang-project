@@ -2,7 +2,6 @@ package dto
 
 import (
 	"mime/multipart"
-	"time"
 )
 
 type IdName struct {
@@ -50,28 +49,6 @@ type File struct {
 	Directory   string
 	Description string
 	MimeType    string
-}
-
-type CreatePersianYear struct {
-	PersianTitle string
-	Year         int
-	StartAt      time.Time
-	EndAt        time.Time
-}
-
-type UpdatePersianYear struct {
-	PersianTitle string
-	Year         int
-	StartAt      time.Time
-	EndAt        time.Time
-}
-
-type PersianYear struct {
-	Id           int
-	PersianTitle string
-	Year         int
-	StartAt      time.Time
-	EndAt        time.Time
 }
 
 type PersianYearWithoutDate struct {
