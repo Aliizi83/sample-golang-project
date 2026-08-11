@@ -59,3 +59,7 @@ type CarModelRepository interface {
 type CarModelColorRepository interface {
 	BaseRepository[models.CarModelColor]
 }
+//Auto generated repository
+type CarModelYearRepository interface {
+	BaseRepository[models.CarModelYear]
+}

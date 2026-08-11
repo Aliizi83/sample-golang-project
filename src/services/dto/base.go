@@ -50,9 +50,3 @@ type File struct {
 	Description string
 	MimeType    string
 }
-
-type PersianYearWithoutDate struct {
-	Id           int
-	PersianTitle string
-	Year         int
-}
