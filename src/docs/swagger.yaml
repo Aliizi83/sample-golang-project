@@ -1,4 +1,17 @@
 definitions:
+  github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelResponse:
+    properties:
+      carType:
+        $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarTypeResponse'
+      company:
+        $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CompanyResponse'
+      gearbox:
+        $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.GearboxResponse'
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.CarTypeResponse:
     properties:
       id:
@@ -47,6 +60,24 @@ definitions:
         type: integer
       name:
         type: string
+    type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCarModelRequest:
+    properties:
+      carTypeId:
+        type: integer
+      companyId:
+        type: integer
+      gearBoxId:
+        type: integer
+      name:
+        maxLength: 15
+        minLength: 3
+        type: string
+    required:
+    - carTypeId
+    - companyId
+    - gearBoxId
+    - name
     type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCarTypeRequest:
     properties:
@@ -279,6 +310,17 @@ definitions:
     required:
     - mobileNumber
     type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCarModelRequest:
+    properties:
+      carTypeId:
+        type: integer
+      companyId:
+        type: integer
+      gearboxId:
+        type: integer
+      name:
+        type: string
+    type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCarTypeRequest:
     properties:
       name:
@@ -409,6 +451,25 @@ definitions:
         type: string
       type:
         type: string
+    type: object
+  ? github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CarModelResponse
+  : properties:
+      hasNextPage:
+        type: boolean
+      hasPreviousPage:
+        type: boolean
+      items:
+        items:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelResponse'
+        type: array
+      pageNumber:
+        type: integer
+      pageSize:
+        type: integer
+      totalPages:
+        type: integer
+      totalRows:
+        type: integer
     type: object
   ? github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CarTypeResponse
   : properties:
@@ -625,6 +686,157 @@ definitions:
 info:
   contact: {}
 paths:
+  /v1/car-models/:
+    post:
+      consumes:
+      - application/json
+      description: Create a carModel
+      parameters:
+      - description: Create a carModel
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCarModelRequest'
+      responses:
+        "201":
+          description: CarModel response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Create a carModel
+      tags:
+      - CarModels
+  /v1/car-models/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a carModel
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: response
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Delete a carModel
+      tags:
+      - CarModels
+    get:
+      consumes:
+      - application/json
+      description: Get a carModel
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: carModel response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get a carModel
+      tags:
+      - CarModels
+    put:
+      consumes:
+      - application/json
+      description: Update a carModel
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update a carModel
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCarModelRequest'
+      responses:
+        "201":
+          description: CarModel response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Update a carModel
+      tags:
+      - CarModels
+  /v1/car-models/get-by-filters:
+    post:
+      consumes:
+      - application/json
+      description: Get CarModels
+      parameters:
+      - description: Request
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PaginationInputWithFilter'
+      responses:
+        "200":
+          description: CarModel response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CarModelResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get CarModels
+      tags:
+      - CarModels
   /v1/car-types/:
     post:
       consumes:

@@ -1,0 +1,52 @@
+package dto
+
+import "github.com/Aliizi83/sample-golang-project/src/services/dto"
+
+type CreateCarModelRequest struct {
+	Name      string `json:"name" binding:"required,min=3,max=15"`
+	CompanyId int    `json:"companyId" binding:"required"`
+	CarTypeId int    `json:"carTypeId" binding:"required"`
+	GearboxId int    `json:"gearBoxId" binding:"required"`
+}
+
+type UpdateCarModelRequest struct {
+	Name      string `json:"name,omitempty"`
+	CompanyId int    `json:"companyId,omitempty"`
+	CarTypeId int    `json:"carTypeId,omitempty"`
+	GearboxId int    `json:"gearboxId,omitempty"`
+}
+type CarModelResponse struct {
+	Id      int             `json:"id"`
+	Name    string          `json:"name"`
+	Company CompanyResponse `json:"company"`
+	CarType CarTypeResponse `json:"carType"`
+	Gearbox GearboxResponse `json:"gearbox"`
+}
+
+func ToCarModelResponse(from dto.CarModel) CarModelResponse {
+	return CarModelResponse{
+		Id:      from.Id,
+		Name:    from.Name,
+		Company: ToCompanyResponse(from.Company),
+		CarType: ToCarTypeResponse(from.CarType),
+		Gearbox: ToGearboxResponse(from.Gearbox),
+	}
+}
+
+func ToCreateCarModel(from CreateCarModelRequest) dto.CreateCarModel {
+	return dto.CreateCarModel{
+		Name:      from.Name,
+		CompanyId: from.CompanyId,
+		CarTypeId: from.CarTypeId,
+		GearboxId: from.GearboxId,
+	}
+}
+
+func ToUpdateCarModel(from UpdateCarModelRequest) dto.UpdateCarModel {
+	return dto.UpdateCarModel{
+		Name:      from.Name,
+		CompanyId: from.CompanyId,
+		CarTypeId: from.CarTypeId,
+		GearboxId: from.GearboxId,
+	}
+}
