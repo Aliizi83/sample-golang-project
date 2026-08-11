@@ -1,8 +1,19 @@
 definitions:
+  github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelColorResponse:
+    properties:
+      color:
+        $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.ColorResponse'
+      id:
+        type: integer
+    type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelResponse:
     properties:
       carType:
         $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarTypeResponse'
+      colors:
+        items:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelColorResponse'
+        type: array
       company:
         $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CompanyResponse'
       gearbox:
@@ -60,6 +71,16 @@ definitions:
         type: integer
       name:
         type: string
+    type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCarModelColorRequest:
+    properties:
+      carModelId:
+        type: integer
+      colorId:
+        type: integer
+    required:
+    - carModelId
+    - colorId
     type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCarModelRequest:
     properties:
@@ -310,6 +331,13 @@ definitions:
     required:
     - mobileNumber
     type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCarModelColorRequest:
+    properties:
+      carModelId:
+        type: integer
+      colorId:
+        type: integer
+    type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCarModelRequest:
     properties:
       carTypeId:
@@ -451,6 +479,25 @@ definitions:
         type: string
       type:
         type: string
+    type: object
+  ? github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CarModelColorResponse
+  : properties:
+      hasNextPage:
+        type: boolean
+      hasPreviousPage:
+        type: boolean
+      items:
+        items:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelColorResponse'
+        type: array
+      pageNumber:
+        type: integer
+      pageSize:
+        type: integer
+      totalPages:
+        type: integer
+      totalRows:
+        type: integer
     type: object
   ? github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CarModelResponse
   : properties:
@@ -686,6 +733,157 @@ definitions:
 info:
   contact: {}
 paths:
+  /v1/car-model-colors/:
+    post:
+      consumes:
+      - application/json
+      description: Create a carModelColor
+      parameters:
+      - description: Create a carModelColor
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCarModelColorRequest'
+      responses:
+        "201":
+          description: CarModelColor response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelColorResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Create a carModelColor
+      tags:
+      - CarModelColors
+  /v1/car-model-colors/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a carModelColor
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: response
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Delete a carModelColor
+      tags:
+      - CarModelColors
+    get:
+      consumes:
+      - application/json
+      description: Get a carModelColor
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: carModelColor response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelColorResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get a carModelColor
+      tags:
+      - CarModelColors
+    put:
+      consumes:
+      - application/json
+      description: Update a carModelColor
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update a carModelColor
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCarModelColorRequest'
+      responses:
+        "201":
+          description: CarModelColor response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelColorResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Update a carModelColor
+      tags:
+      - CarModelColors
+  /v1/car-model-colors/get-by-filters:
+    post:
+      consumes:
+      - application/json
+      description: Get CarModelColors
+      parameters:
+      - description: Request
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PaginationInputWithFilter'
+      responses:
+        "200":
+          description: CarModelColor response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CarModelColorResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get CarModelColors
+      tags:
+      - CarModelColors
   /v1/car-models/:
     post:
       consumes:

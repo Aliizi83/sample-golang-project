@@ -33,12 +33,11 @@ func ToCarModelResponse(from dto.CarModel) CarModelResponse {
 
 	var wg sync.WaitGroup
 
-	go func() {
+	wg.Go(func() {
 		for _, v := range from.CarModelColors {
 			colors = append(colors, ToCarModelColorResponse(v))
 		}
-		wg.Done()
-	}()
+	})
 
 	wg.Wait()
 
@@ -48,6 +47,7 @@ func ToCarModelResponse(from dto.CarModel) CarModelResponse {
 		Company: ToCompanyResponse(from.Company),
 		CarType: ToCarTypeResponse(from.CarType),
 		Gearbox: ToGearboxResponse(from.Gearbox),
+		Colors:  colors,
 	}
 }
 
