@@ -103,6 +103,19 @@ definitions:
     required:
     - name
     type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.CreatePersianYearRequest:
+    properties:
+      endAt:
+        type: string
+      persianTitle:
+        maxLength: 4
+        minLength: 4
+        type: string
+      startAt:
+        type: string
+      year:
+        type: integer
+    type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.CreatePropertyCategoryRequest:
     properties:
       icon:
@@ -178,6 +191,19 @@ definitions:
     required:
     - password
     - username
+    type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.PersianYearResponse:
+    properties:
+      endAt:
+        type: string
+      id:
+        type: integer
+      persianTitle:
+        type: string
+      startAt:
+        type: string
+      year:
+        type: integer
     type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.PropertyCategoryResponse:
     properties:
@@ -309,6 +335,19 @@ definitions:
         type: string
     required:
     - name
+    type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.UpdatePersianYearRequest:
+    properties:
+      endAt:
+        type: string
+      persianTitle:
+        maxLength: 4
+        minLength: 4
+        type: string
+      startAt:
+        type: string
+      year:
+        type: integer
     type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.UpdatePropertyCategoryRequest:
     properties:
@@ -494,6 +533,25 @@ definitions:
       items:
         items:
           $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.GearboxResponse'
+        type: array
+      pageNumber:
+        type: integer
+      pageSize:
+        type: integer
+      totalPages:
+        type: integer
+      totalRows:
+        type: integer
+    type: object
+  ? github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_PersianYearResponse
+  : properties:
+      hasNextPage:
+        type: boolean
+      hasPreviousPage:
+        type: boolean
+      items:
+        items:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.PersianYearResponse'
         type: array
       pageNumber:
         type: integer
@@ -1649,6 +1707,157 @@ paths:
       summary: Health Check
       tags:
       - Health
+  /v1/persian-years/:
+    post:
+      consumes:
+      - application/json
+      description: Create a persianYear
+      parameters:
+      - description: Create a persianYear
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CreatePersianYearRequest'
+      responses:
+        "201":
+          description: PersianYear response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.PersianYearResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Create a persianYear
+      tags:
+      - PersianYears
+  /v1/persian-years/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a persianYear
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: response
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Delete a persianYear
+      tags:
+      - PersianYears
+    get:
+      consumes:
+      - application/json
+      description: Get a persianYear
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: persianYear response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.PersianYearResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get a persianYear
+      tags:
+      - PersianYears
+    put:
+      consumes:
+      - application/json
+      description: Update a persianYear
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update a persianYear
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.UpdatePersianYearRequest'
+      responses:
+        "201":
+          description: PersianYear response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.PersianYearResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Update a persianYear
+      tags:
+      - PersianYears
+  /v1/persian-years/get-by-filters:
+    post:
+      consumes:
+      - application/json
+      description: Get PersianYears
+      parameters:
+      - description: Request
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PaginationInputWithFilter'
+      responses:
+        "200":
+          description: PersianYear response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_PersianYearResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get PersianYears
+      tags:
+      - PersianYears
   /v1/properties/:
     post:
       consumes:
