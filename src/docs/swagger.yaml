@@ -142,8 +142,6 @@ definitions:
       message:
         maxLength: 100
         type: string
-      userId:
-        type: integer
     required:
     - carModelId
     - message

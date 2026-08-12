@@ -4830,9 +4830,6 @@ const docTemplate = `{
                 "message": {
                     "type": "string",
                     "maxLength": 100
-                },
-                "userId": {
-                    "type": "integer"
                 }
             }
         },

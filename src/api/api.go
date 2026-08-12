@@ -14,6 +14,7 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	swaggerFiles "github.com/swaggo/files"
 	goSwagger "github.com/swaggo/gin-swagger"
@@ -26,6 +27,7 @@ func InitServer(cfg *config.Config) {
 	r := gin.New()
 	r.Use(middlewares.DefaultStructuredLogger(cfg))
 	r.Use(gin.Logger(), gin.Recovery())
+	r.Use(middlewares.Prometheus())
 	RegisterPrometheus()
 	RegisterValidators()
 	RegisterRouters(r, cfg)
@@ -56,6 +58,9 @@ func RegisterRouters(r *gin.Engine, cfg *config.Config) {
 			for _, routerFunction := range routers.RegisteredRoutes {
 				routerFunction(v1, cfg)
 			}
+
+			r.Static("/static", "./uploads")
+			r.GET("/metrics", gin.WrapH(promhttp.Handler()))
 		}
 	}
 }
