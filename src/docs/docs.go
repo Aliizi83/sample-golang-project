@@ -786,6 +786,263 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/car-model-properties/": {
+            "post": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Create a carModelProperty",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CarModelProperties"
+                ],
+                "summary": "Create a carModelProperty",
+                "parameters": [
+                    {
+                        "description": "Create a carModelProperty",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCarModelPropertyRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "CarModelProperty response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelPropertyResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/car-model-properties/get-by-filters": {
+            "post": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Get CarModelProperties",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CarModelProperties"
+                ],
+                "summary": "Get CarModelProperties",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PaginationInputWithFilter"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "CarModelProperty response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CarModelPropertyResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/car-model-properties/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Get a carModelProperty",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CarModelProperties"
+                ],
+                "summary": "Get a carModelProperty",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "carModelProperty response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelPropertyResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Update a carModelProperty",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CarModelProperties"
+                ],
+                "summary": "Update a carModelProperty",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update a carModelProperty",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCarModelPropertyRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "CarModelProperty response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelPropertyResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Delete a carModelProperty",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CarModelProperties"
+                ],
+                "summary": "Delete a carModelProperty",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "response",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/car-model-years/": {
             "post": {
                 "security": [
@@ -4138,6 +4395,23 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelPropertyResponse": {
+            "type": "object",
+            "properties": {
+                "carModelId": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "property": {
+                    "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.PropertyResponse"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelResponse": {
             "type": "object",
             "properties": {
@@ -4303,6 +4577,26 @@ const docTemplate = `{
                 },
                 "priceAt": {
                     "type": "string"
+                }
+            }
+        },
+        "github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCarModelPropertyRequest": {
+            "type": "object",
+            "required": [
+                "carModelId",
+                "propertyId",
+                "value"
+            ],
+            "properties": {
+                "carModelId": {
+                    "type": "integer"
+                },
+                "propertyId": {
+                    "type": "integer"
+                },
+                "value": {
+                    "type": "string",
+                    "maxLength": 100
                 }
             }
         },
@@ -4710,6 +5004,18 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCarModelPropertyRequest": {
+            "type": "object",
+            "required": [
+                "value"
+            ],
+            "properties": {
+                "value": {
+                    "type": "string",
+                    "maxLength": 100
+                }
+            }
+        },
         "github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCarModelRequest": {
             "type": "object",
             "properties": {
@@ -5001,6 +5307,35 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelPriceHistoryResponse"
+                    }
+                },
+                "pageNumber": {
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "type": "integer"
+                },
+                "totalPages": {
+                    "type": "integer"
+                },
+                "totalRows": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CarModelPropertyResponse": {
+            "type": "object",
+            "properties": {
+                "hasNextPage": {
+                    "type": "boolean"
+                },
+                "hasPreviousPage": {
+                    "type": "boolean"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelPropertyResponse"
                     }
                 },
                 "pageNumber": {

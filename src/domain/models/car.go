@@ -7,6 +7,7 @@ type Gearbox struct {
 	Name      string `gorm:"size:15;type:string;not null,unique;"`
 	CarModels []CarModel
 }
+
 //CRUD done
 
 type CarType struct {
@@ -14,6 +15,7 @@ type CarType struct {
 	Name      string `gorm:"size:15;type:string;not null,unique;"`
 	CarModels []CarModel
 }
+
 //CRUD done
 
 type Company struct {
@@ -23,6 +25,7 @@ type Company struct {
 	CountryId int
 	CarModels []CarModel
 }
+
 //CRUD done
 
 type CarModel struct {
@@ -49,6 +52,8 @@ type CarModelColor struct {
 	ColorId    int      `gorm:"uniqueIndex:idx_CarModelId_ColorId"`
 }
 
+//CRUD completed
+
 type CarModelYear struct {
 	BaseModel
 	CarModel               CarModel    `gorm:"foreignKey:CarModelId;constraint:OnUpdate:NO ACTION;OnDelete:NO ACTION"`
@@ -57,6 +62,8 @@ type CarModelYear struct {
 	PersianYearId          int         `gorm:"uniqueIndex:idx_CarModelId_PersianYearId"`
 	CarModelPriceHistories []CarModelPriceHistory
 }
+
+//CRUD completed
 
 type CarModelImage struct {
 	BaseModel
@@ -67,6 +74,8 @@ type CarModelImage struct {
 	IsMainImage bool
 }
 
+//CRUD completed
+
 type CarModelPriceHistory struct {
 	BaseModel
 	CarModelYear   CarModelYear `gorm:"foreignKey:CarModelYearId;constraint:OnUpdate:NO ACTION;OnDelete:NO ACTION"`
@@ -74,6 +83,8 @@ type CarModelPriceHistory struct {
 	Price          float64   `gorm:"type:decimal(10,2);not null"`
 	PriceAt        time.Time `gorm:"type:TIMESTAMP with time zone;not null"`
 }
+
+//CRUD completed
 
 type CarModelProperty struct {
 	BaseModel
@@ -83,6 +94,8 @@ type CarModelProperty struct {
 	PropertyId int      `gorm:"uniqueIndex:idx_CarModelId_PropertyId"`
 	Value      string   `gorm:"size:1000,type:string;not null"`
 }
+
+//CRUD completed
 
 type CarModelComment struct {
 	BaseModel

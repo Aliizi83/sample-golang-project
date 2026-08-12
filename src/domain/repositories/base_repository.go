@@ -68,4 +68,7 @@ type CarModelPriceHistoryRepository interface {
 }//Auto generated repository
 type CarModelImageRepository interface {
 	BaseRepository[models.CarModelImage]
+}//Auto generated repository
+type CarModelPropertyRepository interface {
+	BaseRepository[models.CarModelProperty]
 }
