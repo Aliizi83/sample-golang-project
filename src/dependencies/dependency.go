@@ -78,3 +78,8 @@ func GetCarModelColorRepository(cfg *config.Config) repositories.CarModelColorRe
 func GetCarModelYearRepository(cfg *config.Config) repositories.CarModelYearRepository {
 	return postgres_repositories.NewBaseRepository[models.CarModelYear](cfg, []db.PreloadEntity{})
 }
+//Generated dependency function
+
+func GetCarModelPriceHistoryRepository(cfg *config.Config) repositories.CarModelPriceHistoryRepository {
+	return postgres_repositories.NewBaseRepository[models.CarModelPriceHistory](cfg, []db.PreloadEntity{})
+}
