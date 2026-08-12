@@ -8,19 +8,25 @@ import (
 	"github.com/Aliizi83/sample-golang-project/src/api/validations"
 	"github.com/Aliizi83/sample-golang-project/src/config"
 	"github.com/Aliizi83/sample-golang-project/src/docs"
+	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
+	"github.com/Aliizi83/sample-golang-project/src/pkg/metrics"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
+	"github.com/prometheus/client_golang/prometheus"
 
 	swaggerFiles "github.com/swaggo/files"
 	goSwagger "github.com/swaggo/gin-swagger"
 )
+
+var logger = logging.NewLogger(config.GetConfig())
 
 func InitServer(cfg *config.Config) {
 
 	r := gin.New()
 	r.Use(middlewares.DefaultStructuredLogger(cfg))
 	r.Use(gin.Logger(), gin.Recovery())
+	RegisterPrometheus()
 	RegisterValidators()
 	RegisterRouters(r, cfg)
 	RegisterSwagger(r, cfg)
@@ -30,8 +36,12 @@ func InitServer(cfg *config.Config) {
 func RegisterValidators() {
 	val, ok := binding.Validator.Engine().(*validator.Validate)
 	if ok {
-		val.RegisterValidation("mobile", validations.IranianMobileNumberValidator)
-		val.RegisterValidation("password", validations.PasswordValidator)
+		if err := val.RegisterValidation("mobile", validations.IranianMobileNumberValidator); err != nil {
+			logger.Error(err, logging.Validation, logging.Startup, err.Error(), nil)
+		}
+		if err := val.RegisterValidation("password", validations.PasswordValidator); err != nil {
+			logger.Error(err, logging.Validation, logging.Startup, err.Error(), nil)
+		}
 	}
 }
 
@@ -58,4 +68,15 @@ func RegisterSwagger(r *gin.Engine, cfg *config.Config) {
 	docs.SwaggerInfo.Schemes = []string{"http"}
 	docs.SwaggerInfo.Host = fmt.Sprintf("%s:%s", cfg.Server.Domain, cfg.Server.InternalPort)
 	r.GET("/swagger/*any", goSwagger.WrapHandler(swaggerFiles.Handler))
+}
+
+func RegisterPrometheus() {
+	if err := prometheus.Register(metrics.DbCall); err != nil {
+		logger.Error(err, logging.Prometheus, logging.Startup, err.Error(), nil)
+	}
+
+	if err := prometheus.Register(metrics.HttpDuration); err != nil {
+		logger.Error(err, logging.Prometheus, logging.Startup, err.Error(), nil)
+	}
+
 }

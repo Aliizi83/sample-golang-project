@@ -3,7 +3,7 @@ package common
 import "reflect"
 
 func GetTypeName[T any]() string {
-	t := reflect.TypeOf((*T)(nil)).Elem()
+	t := reflect.TypeFor[T]()
 
 	for t.Kind() == reflect.Ptr {
 		t = t.Elem()

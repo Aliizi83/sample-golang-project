@@ -12,22 +12,25 @@ import (
 	"github.com/Aliizi83/sample-golang-project/src/domain/models"
 	"github.com/Aliizi83/sample-golang-project/src/infra/presistence/db"
 	"github.com/Aliizi83/sample-golang-project/src/pkg/logging"
+	"github.com/Aliizi83/sample-golang-project/src/pkg/metrics"
 	"gorm.io/gorm"
 )
 
 const softDeleteExp string = "id = ? AND deleted_by IS NULL"
 
 type BaseRepository[TModel models.Identifiable] struct {
-	database *gorm.DB
-	logger   logging.Logger
-	preloads []db.PreloadEntity
+	database  *gorm.DB
+	logger    logging.Logger
+	preloads  []db.PreloadEntity
+	modelName string
 }
 
 func NewBaseRepository[TModel models.Identifiable](cfg *config.Config, preloads []db.PreloadEntity) *BaseRepository[TModel] {
 	return &BaseRepository[TModel]{
-		database: db.GetDB(),
-		logger:   logging.NewLogger(cfg),
-		preloads: preloads,
+		database:  db.GetDB(),
+		logger:    logging.NewLogger(cfg),
+		preloads:  preloads,
+		modelName: common.GetTypeName[TModel](),
 	}
 }
 
@@ -36,6 +39,8 @@ func (r *BaseRepository[TModel]) Create(ctx context.Context, model TModel) (TMod
 	if err := tx.Create(&model).Error; err != nil {
 		modelName := common.GetTypeName[TModel]()
 		r.logger.Error(err, logging.Postgres, logging.Insert, fmt.Sprintf("error while creating %s : %s ", modelName, err.Error()), nil)
+		metrics.DbCall.WithLabelValues(modelName, "Create", "Failed")
+
 		tx.Rollback()
 		return model, err
 	}
@@ -58,11 +63,13 @@ func (r *BaseRepository[TModel]) Update(ctx context.Context, id int, updateField
 
 	if err := tx.Model(&model).Where(softDeleteExp, id).Updates(snakeUpdateFields).Error; err != nil {
 		tx.Rollback()
-		modelName := common.GetTypeName[TModel]()
-		r.logger.Error(err, logging.Postgres, logging.Update, fmt.Sprintf("error while updating %s : %s ", modelName, err.Error()), nil)
+		r.logger.Error(err, logging.Postgres, logging.Update, fmt.Sprintf("error while updating %s : %s ", r.modelName, err.Error()), nil)
+		metrics.DbCall.WithLabelValues(r.modelName, "Update", "Failed")
+
 		return model, err
 	}
 	tx.Commit()
+	metrics.DbCall.WithLabelValues(r.modelName, "Update", "Success")
 	return r.GetById(ctx, int(id))
 }
 func (r *BaseRepository[TModel]) Delete(ctx context.Context, id int) error {
@@ -76,22 +83,24 @@ func (r *BaseRepository[TModel]) Delete(ctx context.Context, id int) error {
 
 	if err := tx.Model(&model).Where(softDeleteExp, id).Updates(updateFields).Error; err != nil {
 		tx.Rollback()
-		modelName := common.GetTypeName[TModel]()
-		r.logger.Error(err, logging.Postgres, logging.Update, fmt.Sprintf("error while deleting %s : %s ", modelName, err.Error()), nil)
+		r.logger.Error(err, logging.Postgres, logging.Update, fmt.Sprintf("error while deleting %s : %s ", r.modelName, err.Error()), nil)
+		metrics.DbCall.WithLabelValues(r.modelName, "Delete", "Failed")
 		return err
 	}
 	tx.Commit()
+	metrics.DbCall.WithLabelValues(r.modelName, "Delete", "Success")
 	return nil
 }
 func (r *BaseRepository[TModel]) GetById(ctx context.Context, id int) (TModel, error) {
 	var model TModel
 	database := db.Preload(r.database, r.preloads)
 	if err := database.Where(softDeleteExp, id).Where("id = ?", id).First(&model).Error; err != nil {
-		modelName := common.GetTypeName[TModel]()
-		r.logger.Error(err, logging.Postgres, logging.Insert, fmt.Sprintf("error while selecting %s : %s ", modelName, err.Error()), nil)
+		r.logger.Error(err, logging.Postgres, logging.Insert, fmt.Sprintf("error while selecting %s : %s ", r.modelName, err.Error()), nil)
+		metrics.DbCall.WithLabelValues(r.modelName, "GetById", "Failed")
 		return model, err
 	}
 
+	metrics.DbCall.WithLabelValues(r.modelName, "GetById", "Success")
 	return model, nil
 }
 func (r *BaseRepository[TModel]) GetByFilter(ctx context.Context, req filters.PaginationInputWithFilter) (int64, *[]TModel, error) {
