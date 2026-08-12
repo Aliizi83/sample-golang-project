@@ -6,6 +6,17 @@ definitions:
       id:
         type: integer
     type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelCommentResponse:
+    properties:
+      carModelId:
+        type: integer
+      id:
+        type: integer
+      message:
+        type: string
+      user:
+        $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.UserResponse'
+    type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelImageResponse:
     properties:
       carModelId:
@@ -123,6 +134,19 @@ definitions:
     required:
     - carModelId
     - colorId
+    type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCarModelCommentRequest:
+    properties:
+      carModelId:
+        type: integer
+      message:
+        maxLength: 100
+        type: string
+      userId:
+        type: integer
+    required:
+    - carModelId
+    - message
     type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCarModelImageRequest:
     properties:
@@ -429,6 +453,14 @@ definitions:
       colorId:
         type: integer
     type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCarModelCommentRequest:
+    properties:
+      message:
+        maxLength: 100
+        type: string
+    required:
+    - message
+    type: object
   github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCarModelImageRequest:
     properties:
       isMainImage:
@@ -563,6 +595,19 @@ definitions:
         maxLength: 15
         type: string
     type: object
+  github_com_Aliizi83_sample-golang-project_src_api_dto.UserResponse:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: integer
+      lastName:
+        type: string
+      username:
+        type: string
+    type: object
   github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse:
     properties:
       error: {}
@@ -607,6 +652,25 @@ definitions:
       items:
         items:
           $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelColorResponse'
+        type: array
+      pageNumber:
+        type: integer
+      pageSize:
+        type: integer
+      totalPages:
+        type: integer
+      totalRows:
+        type: integer
+    type: object
+  ? github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CarModelCommentResponse
+  : properties:
+      hasNextPage:
+        type: boolean
+      hasPreviousPage:
+        type: boolean
+      items:
+        items:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelCommentResponse'
         type: array
       pageNumber:
         type: integer
@@ -1078,6 +1142,157 @@ paths:
       summary: Get CarModelColors
       tags:
       - CarModelColors
+  /v1/car-model-comments/:
+    post:
+      consumes:
+      - application/json
+      description: Create a carModelComment
+      parameters:
+      - description: Create a carModelComment
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CreateCarModelCommentRequest'
+      responses:
+        "201":
+          description: CarModelComment response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelCommentResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Create a carModelComment
+      tags:
+      - CarModelComments
+  /v1/car-model-comments/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a carModelComment
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: response
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Delete a carModelComment
+      tags:
+      - CarModelComments
+    get:
+      consumes:
+      - application/json
+      description: Get a carModelComment
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: carModelComment response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelCommentResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get a carModelComment
+      tags:
+      - CarModelComments
+    put:
+      consumes:
+      - application/json
+      description: Update a carModelComment
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update a carModelComment
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.UpdateCarModelCommentRequest'
+      responses:
+        "201":
+          description: CarModelComment response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_dto.CarModelCommentResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Update a carModelComment
+      tags:
+      - CarModelComments
+  /v1/car-model-comments/get-by-filters:
+    post:
+      consumes:
+      - application/json
+      description: Get CarModelComments
+      parameters:
+      - description: Request
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PaginationInputWithFilter'
+      responses:
+        "200":
+          description: CarModelComment response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_domain_filters.PagedList-github_com_Aliizi83_sample-golang-project_src_api_dto_CarModelCommentResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Aliizi83_sample-golang-project_src_api_helpers.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get CarModelComments
+      tags:
+      - CarModelComments
   /v1/car-model-images/:
     post:
       consumes:

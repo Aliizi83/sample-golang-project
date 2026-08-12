@@ -5,6 +5,7 @@ import (
 
 	"github.com/Aliizi83/sample-golang-project/src/common"
 	"github.com/Aliizi83/sample-golang-project/src/config"
+	"github.com/Aliizi83/sample-golang-project/src/constants"
 	"github.com/Aliizi83/sample-golang-project/src/domain/filters"
 	"github.com/Aliizi83/sample-golang-project/src/domain/models"
 	"github.com/Aliizi83/sample-golang-project/src/domain/repositories"
@@ -86,4 +87,14 @@ func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) GetByFilter(ctx conte
 	}
 
 	return filters.Paginate[TModel, TResponse](count, models, req.PageNumber, int64(req.PageSize))
+}
+
+func (s *BaseService[TModel, TCreate, TUpdate, TResponse]) GetAuthUserId(ctx context.Context) int {
+
+	claims := ctx.Value(constants.ClaimsKey).(map[string]any)
+	value, ok := claims[constants.UserIdKey]
+	if !ok {
+		return -1
+	}
+	return int(value.(float64))
 }

@@ -59,16 +59,20 @@ type CarModelRepository interface {
 type CarModelColorRepository interface {
 	BaseRepository[models.CarModelColor]
 }
-//Auto generated repository
+
+// Auto generated repository
 type CarModelYearRepository interface {
 	BaseRepository[models.CarModelYear]
-}//Auto generated repository
+} //Auto generated repository
 type CarModelPriceHistoryRepository interface {
 	BaseRepository[models.CarModelPriceHistory]
-}//Auto generated repository
+} //Auto generated repository
 type CarModelImageRepository interface {
 	BaseRepository[models.CarModelImage]
-}//Auto generated repository
+} //Auto generated repository
 type CarModelPropertyRepository interface {
 	BaseRepository[models.CarModelProperty]
+} //Auto generated repository
+type CarModelCommentRepository interface {
+	BaseRepository[models.CarModelComment]
 }
