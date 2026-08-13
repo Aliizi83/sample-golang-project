@@ -26,9 +26,9 @@ func InitServer(cfg *config.Config) {
 
 	r := gin.New()
 	r.Use(middlewares.DefaultStructuredLogger(cfg))
-	r.Use(gin.Logger(), gin.CustomRecovery(middlewares.ErrorHandler), middlewares.LimitByRequest())
-	r.Use(middlewares.Prometheus())
 	RegisterPrometheus()
+	r.Use(middlewares.Prometheus())
+	r.Use(gin.Logger(), gin.CustomRecovery(middlewares.ErrorHandler), middlewares.LimitByRequest())
 	RegisterValidators()
 	RegisterRouters(r, cfg)
 	RegisterSwagger(r, cfg)
