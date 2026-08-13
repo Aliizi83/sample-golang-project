@@ -35,3 +35,11 @@ func GenerateBaseResponseWithValidationError(result any, success bool, resultCod
 		ValidationErrors: validations.GetValidationErrors(err),
 	}
 }
+
+func GenerateBaseResponseWithAnyError(result any, success bool, resultCode ResultCode, err any) *BaseHttpResponse {
+	return &BaseHttpResponse{Result: result,
+		Success:    success,
+		ResultCode: int(resultCode),
+		Error:      err,
+	}
+}

@@ -26,7 +26,7 @@ func InitServer(cfg *config.Config) {
 
 	r := gin.New()
 	r.Use(middlewares.DefaultStructuredLogger(cfg))
-	r.Use(gin.Logger(), gin.Recovery())
+	r.Use(gin.Logger(), gin.CustomRecovery(middlewares.ErrorHandler), middlewares.LimitByRequest())
 	r.Use(middlewares.Prometheus())
 	RegisterPrometheus()
 	RegisterValidators()
